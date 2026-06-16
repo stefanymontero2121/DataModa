@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataModa — Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:      #FAF7F2;
+    --parchment:  #F2EDE4;
+    --blush:      #F0D9D4;
+    --blush-mid:  #DFB8B0;
+    --blush-deep: #B07060;
+    --blush-text: #5C2E22;
+    --sage:       #D8E5D6;
+    --sage-mid:   #AECBAA;
+    --sage-deep:  #6A9964;
+    --sage-text:  #2B4E27;
+    --mauve:      #E5D8EC;
+    --mauve-mid:  #C4A8D8;
+    --mauve-deep: #8B5EA8;
+    --mauve-text: #3E1F5C;
+    --dust:       #E8E0D5;
+    --dust-mid:   #C8BDB0;
+    --dust-text:  #4A3D30;
+    --ink:        #1C1510;
+    --ink-mid:    #4A3D30;
+    --ink-light:  #8A7A68;
+    --white:      #FFFFFF;
+    --error:      #C45050;
+    --error-bg:   #FBF0EE;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #E8E2DA; font-family: 'Jost', sans-serif; color: var(--ink); }
+
+  /* ── PAGE WRAPPER ── */
+  .page {
+    width: 1280px;
+    min-height: 100vh;
+    margin: 0 auto 80px;
+    background: var(--cream);
+    box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+  }
+
+  /* ── APP NAV ── */
+  .app-nav {
+    background: var(--parchment);
+    border-bottom: 1px solid var(--dust);
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 56px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .app-logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; letter-spacing: 0.06em; color: var(--ink); }
+  .app-logo em { color: var(--blush-deep); font-style: italic; }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a { font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); text-decoration: none; }
+  .nav-links a.active { color: var(--blush-deep); }
+
+  /* ── SCREEN SECTION ── */
+  .screen-section {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    border-bottom: 1px solid var(--dust);
+  }
+
+  /* ── INNER NAV BAR (sub-nav inside each screen) ── */
+  .inner-nav {
+    background: var(--cream);
+    border-bottom: 1px solid var(--dust);
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 56px;
+  }
+  .inner-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--ink); }
+  .inner-logo em { color: var(--blush-deep); font-style: italic; }
+  .inner-links { display: flex; gap: 28px; }
+  .inner-links span { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); }
+  .inner-links span.cur { color: var(--blush-deep); }
+
+  /* ── BODY AREA ── */
+  .screen-body { flex: 1; padding: 56px; }
+  .screen-body-wide { flex: 1; padding: 56px 56px 56px; }
+
+  /* ── SCREEN LABEL ── */
+  .screen-label {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 48px;
+  }
+  .screen-label-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400;
+    color: var(--ink-light); letter-spacing: 0.1em;
+    border: 1px solid var(--dust-mid); border-radius: 20px; padding: 3px 14px;
+  }
+  .screen-label-title {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--blush-deep);
+  }
+
+  /* ── PAGE HEADING ── */
+  .page-heading { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin-bottom: 6px; }
+  .page-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 40px; }
+
+  /* ── FORM ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mid); }
+  .field-select-wrap { position: relative; }
+  .field-select {
+    width: 100%; background: var(--parchment); border: 1px solid var(--dust);
+    border-radius: 12px; padding: 13px 16px; font-size: 14px;
+    font-family: 'Jost', sans-serif; color: var(--ink); appearance: none;
+  }
+  .field-select-wrap::after {
+    content: ''; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0; border-left: 5px solid transparent;
+    border-right: 5px solid transparent; border-top: 6px solid var(--ink-light);
+    pointer-events: none;
+  }
+
+  /* ── BUTTONS ── */
+  .btn { border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 14px; transition: opacity .15s; }
+  .btn:hover { opacity: .88; }
+  .btn-ink { background: var(--ink); color: var(--cream); font-size: 13px; padding: 16px 32px; }
+  .btn-full { width: 100%; }
+  .btn-outline { background: transparent; border: 1px solid var(--dust-mid); color: var(--ink-mid); font-size: 13px; padding: 15px 32px; }
+  .btn-sage { background: var(--sage-deep); color: white; font-size: 13px; padding: 16px 32px; }
+  .btn-row { display: flex; gap: 14px; }
+  .btn-row > * { flex: 1; }
+
+  /* ── PROGRESS ── */
+  .progress { display: flex; align-items: center; gap: 0; margin-bottom: 48px; }
+  .prog-step { display: flex; align-items: center; gap: 10px; }
+  .prog-circle {
+    width: 32px; height: 32px; border-radius: 50%; font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .prog-circle.done  { background: var(--blush-deep); color: white; }
+  .prog-circle.active { background: var(--ink); color: white; }
+  .prog-circle.idle  { background: transparent; border: 1.5px solid var(--dust-mid); color: var(--ink-light); }
+  .prog-name { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+  .prog-name.active { color: var(--ink); font-weight: 500; }
+  .prog-line { width: 48px; height: 1px; background: var(--dust-mid); flex-shrink: 0; }
+
+  /* ── UPLOAD ── */
+  .upload-zone {
+    border: 1.5px dashed var(--blush-mid); border-radius: 16px; background: var(--blush);
+    padding: 52px 32px; text-align: center; margin-bottom: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .upload-icon-box {
+    width: 60px; height: 60px; background: var(--white); border-radius: 16px;
+    border: 1px solid var(--blush-mid); display: flex; align-items: center; justify-content: center;
+  }
+  .upload-icon-box svg { width: 26px; height: 26px; stroke: var(--blush-deep); fill: none; stroke-width: 1.5; }
+  .upload-title { font-size: 16px; font-weight: 500; color: var(--blush-text); }
+  .upload-sub   { font-size: 13px; color: var(--blush-deep); opacity: 0.8; }
+  .file-chip {
+    display: flex; align-items: center; gap: 14px; background: var(--white);
+    border: 1px solid var(--dust); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
+  }
+  .file-chip-icon { width: 38px; height: 38px; background: var(--sage); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--sage-text); }
+  .file-chip-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .file-chip-size { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
+  .error-alert {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--error-bg); border: 1px solid #F0C0C0; border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .error-icon { width: 20px; height: 20px; background: var(--error); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .error-icon span { font-size: 11px; font-weight: 700; color: white; }
+  .error-text { font-size: 13px; color: var(--error); line-height: 1.7; }
+
+  /* ── CHART ── */
+  .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .chart-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--ink); }
+  .chart-sub { font-size: 12px; color: var(--ink-light); margin-top: 3px; }
+  .legend { display: flex; gap: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink-light); }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .chart-wrap { background: var(--parchment); border-radius: 16px; padding: 24px 20px 16px; margin-bottom: 24px; }
+
+  /* ── KPIS ── */
+  .kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { border-radius: 16px; padding: 20px 22px; border: 1px solid transparent; }
+  .kpi-card.rose { background: var(--blush); border-color: var(--blush-mid); }
+  .kpi-card.sage { background: var(--sage);  border-color: var(--sage-mid); }
+  .kpi-card.white { background: var(--white); border-color: var(--dust); }
+  .kpi-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .kpi-card.rose  .kpi-label { color: var(--blush-deep); }
+  .kpi-card.sage  .kpi-label { color: var(--sage-deep); }
+  .kpi-card.white .kpi-label { color: var(--ink-light); }
+  .kpi-val { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; line-height: 1; }
+  .kpi-card.rose  .kpi-val { color: var(--blush-text); }
+  .kpi-card.sage  .kpi-val { color: var(--sage-text); }
+  .kpi-card.white .kpi-val { color: var(--ink); }
+  .kpi-unit { font-size: 16px; color: inherit; opacity: 0.6; }
+  .kpi-note { font-size: 12px; margin-top: 6px; opacity: 0.75; }
+
+  /* ── REC STRIP ── */
+  .rec-strip {
+    border-left: 3px solid var(--mauve-deep); background: var(--mauve);
+    padding: 14px 20px; font-size: 13px; color: var(--mauve-text);
+    line-height: 1.7; margin-bottom: 24px; border-radius: 0 12px 12px 0;
+  }
+
+  /* ── SENSITIVITY ── */
+  .sens-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .sens-opt {
+    display: flex; align-items: center; gap: 16px;
+    border: 1px solid var(--dust); border-radius: 14px; padding: 18px 22px;
+    background: var(--white);
+  }
+  .sens-opt.active { border-color: var(--mauve-deep); background: var(--mauve); }
+  .sens-radio { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--dust-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .sens-opt.active .sens-radio { border-color: var(--mauve-deep); background: var(--mauve-deep); }
+  .sens-radio-dot { width: 7px; height: 7px; background: white; border-radius: 50%; }
+  .sens-info { flex: 1; }
+  .sens-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .sens-desc { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
+  .sens-opt.active .sens-name { color: var(--mauve-text); }
+  .sens-opt.active .sens-desc { color: var(--mauve-deep); }
+  .sens-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
+  .sens-badge.low  { background: var(--sage);  color: var(--sage-text); }
+  .sens-badge.mid  { background: var(--blush); color: var(--blush-text); }
+  .sens-badge.high { background: var(--mauve); color: var(--mauve-text); }
+
+  .result-box {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--parchment); border: 1px solid var(--dust);
+    border-radius: 16px; padding: 22px 28px; margin-bottom: 24px;
+  }
+  .result-label { font-size: 11px; color: var(--ink-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .result-val { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--ink); line-height: 1; }
+  .result-unit { font-size: 20px; color: var(--ink-light); }
+  .result-delta { background: var(--sage); color: var(--sage-text); border-radius: 20px; padding: 8px 18px; font-size: 14px; font-weight: 500; }
+
+  /* ── COMPARE TABLE ── */
+  .comp-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .comp-table th { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); padding: 0 20px 12px; text-align: left; }
+  .comp-table th:last-child { text-align: right; }
+  .comp-table td { padding: 14px 20px; border-top: 1px solid var(--dust); font-size: 14px; color: var(--ink-mid); vertical-align: middle; }
+  .comp-table td:last-child { text-align: right; }
+  .comp-table tr.hl td { background: var(--blush); color: var(--blush-text); font-weight: 500; }
+  .comp-delta { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: var(--dust); color: var(--dust-text); }
+  .hl .comp-delta { background: var(--blush-mid); color: var(--blush-text); }
+
+  /* ── FINAL BANNER ── */
+  .final-banner {
+    background: var(--ink); border-radius: 18px; padding: 30px 36px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+  }
+  .fb-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust-mid); margin-bottom: 8px; }
+  .fb-num { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--cream); line-height: 1; }
+  .fb-unit { font-size: 22px; color: var(--blush-mid); }
+  .fb-right { text-align: right; }
+  .fb-cat { font-size: 13px; color: var(--blush-mid); margin-bottom: 4px; }
+  .fb-date { font-size: 12px; color: var(--ink-light); }
+
+  /* ── PAGE INDICATOR ── */
+  .page-indicator {
+    display: flex; justify-content: center; gap: 8px; padding: 24px 0 8px;
+  }
+  .page-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dust-mid); }
+  .page-dot.active { background: var(--blush-deep); width: 24px; border-radius: 3px; }
+
+  /* Hero bars decoration */
+  .hero-bars { display: flex; align-items: flex-end; gap: 8px; }
+  .hbar { border-radius: 4px 4px 0 0; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ SCREEN 1 ════════════════════════════════ -->
+<div class="page" id="s1">
+  <nav class="app-nav">
+    <div class="app-logo">Data<em>Moda</em></div>
+    <div class="nav-links">
+      <a href="#s1" class="active">Análisis</a>
+      <a href="#s2">Carga</a>
+      <a href="#s3">Predicción</a>
+      <a href="#s4">Ajuste</a>
+      <a href="#s5">Plan final</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div style="background:var(--parchment); padding:80px 56px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; border-bottom:1px solid var(--dust);">
+    <div>
+      <div style="font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--blush-deep); margin-bottom:20px;">Plataforma de optimización textil</div>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:300; line-height:1.1; color:var(--ink); margin-bottom:20px;">
+        Predice.<br>Ajusta.<br><em style="color:var(--blush-deep); font-style:italic;">Produce.</em>
+      </h1>
+      <p style="font-size:15px; color:var(--ink-light); line-height:1.9; max-width:440px; margin-bottom:36px;">Sistema inteligente que analiza tus datos históricos de ventas para calcular la cantidad óptima de prendas a producir, reduciendo sobrestock y maximizando eficiencia.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span style="background:var(--blush); color:var(--blush-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Predicción de demanda</span>
+        <span style="background:var(--sage); color:var(--sage-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Regresión lineal</span>
+        <span style="background:var(--mauve); color:var(--mauve-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Ajuste dinámico</span>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:flex-end; justify-content:center;">
+      <div class="hero-bars">
+        <div class="hbar" style="width:32px; height:70px; background:var(--blush);"></div>
+        <div class="hbar" style="width:32px; height:100px; background:var(--blush-mid);"></div>
+        <div class="hbar" style="width:32px; height:82px; background:var(--blush);"></div>
+        <div class="hbar" style="width:32px; height:126px; background:var(--blush-mid);"></div>
+        <div class="hbar" style="width:32px; height:96px; background:var(--blush);"></div>
+        <div class="hbar" style="width:32px; height:156px; background:var(--blush-deep);"></div>
+        <div class="hbar" style="width:32px; height:136px; background:var(--blush-mid);"></div>
+        <div class="hbar" style="width:32px; height:180px; background:var(--blush-deep);"></div>
+      </div>
+      <div class="hero-bars" style="margin-left:16px;">
+        <div class="hbar" style="width:32px; height:60px; background:var(--sage);"></div>
+        <div class="hbar" style="width:32px; height:90px; background:var(--sage-mid);"></div>
+        <div class="hbar" style="width:32px; height:116px; background:var(--sage-mid);"></div>
+        <div class="hbar" style="width:32px; height:148px; background:var(--sage-deep);"></div>
+        <div class="hbar" style="width:32px; height:124px; background:var(--sage-mid);"></div>
+        <div class="hbar" style="width:32px; height:172px; background:var(--sage-deep);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form area -->
+  <div class="inner-nav">
+    <div class="inner-logo">Data<em>Moda</em></div>
+    <div class="inner-links">
+      <span class="cur">Análisis</span><span>Historial</span><span>Configuración</span>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="screen-label">
+      <span class="screen-label-num">Pantalla 01</span>
+      <span class="screen-label-title">Pantalla principal</span>
+    </div>
+    <div class="page-heading">Nuevo análisis de demanda</div>
+    <div class="page-sub">Configura los parámetros antes de cargar tus datos históricos de ventas.</div>
+    <div class="form-grid">
+      <div class="field"><label class="field-label">Categoría de prenda</label>
+        <div class="field-select-wrap"><select class="field-select"><option>Poleras</option><option>Pantalones</option><option>Chaquetas</option><option>Vestidos</option></select></div>
+      </div>
+      <div class="field"><label class="field-label">Temporada</label>
+        <div class="field-select-wrap"><select class="field-select"><option>Otoño · Invierno 2025</option><option>Primavera · Verano 2025</option><option>Otoño · Invierno 2026</option></select></div>
+      </div>
+      <div class="field"><label class="field-label">Mercado objetivo</label>
+        <div class="field-select-wrap"><select class="field-select"><option>Chile · Nacional</option><option>Latinoamérica</option><option>Exportación</option></select></div>
+      </div>
+      <div class="field"><label class="field-label">Período de análisis</label>
+        <div class="field-select-wrap"><select class="field-select"><option>Últimos 12 meses</option><option>Últimos 24 meses</option><option>Últimos 36 meses</option></select></div>
+      </div>
+    </div>
+    <button class="btn btn-ink btn-full" style="margin-top:8px;">Cargar datos de ventas →</button>
+  </div>
+  <div class="page-indicator"><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div></div>
+</div>
+
+<!-- ════════════════════════════════ SCREEN 2 ════════════════════════════════ -->
+<div class="page" id="s2">
+  <div class="inner-nav">
+    <div class="inner-logo">Data<em>Moda</em></div>
+    <div class="inner-links">
+      <span class="cur">Carga de datos</span><span>Historial</span><span>Configuración</span>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="screen-label">
+      <span class="screen-label-num">Pantalla 02</span>
+      <span class="screen-label-title">Carga y validación · CU001</span>
+    </div>
+    <div class="progress">
+      <div class="prog-step"><div class="prog-circle done">✓</div><div class="prog-name">Configuración</div></div>
+      <div class="prog-line"></div>
+      <div class="prog-step"><div class="prog-circle active">2</div><div class="prog-name active">Carga de datos</div></div>
+      <div class="prog-line"></div>
+      <div class="prog-step"><div class="prog-circle idle">3</div><div class="prog-name">Análisis</div></div>
+      <div class="prog-line"></div>
+      <div class="prog-step"><div class="prog-circle idle">4</div><div class="prog-name">Resultados</div></div>
+    </div>
+    <div class="upload-zone">
+      <div class="upload-icon-box">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-title">Arrastra tu archivo aquí</div>
+      <div class="upload-sub">Formatos permitidos: CSV, XLSX · Tamaño máximo: 10 MB</div>
+    </div>
+    <div class="file-chip">
+      <div class="file-chip-icon">CSV</div>
+      <div>
+        <div class="file-chip-name">historial_ventas_Q3_2025.csv</div>
+        <div class="file-chip-size">2.4 MB · Subido hace 2 min</div>
+      </div>
+    </div>
+    <div class="error-alert">
+      <div class="error-icon"><span>!</span></div>
+      <div class="error-text"><strong>Formato inválido:</strong> El archivo no contiene las columnas requeridas: <em>fecha, categoría, unidades_vendidas.</em></div>
+    </div>
+    <button class="btn btn-ink btn-full">Analizar archivo →</button>
+  </div>
+  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div></div>
+</div>
+
+<!-- ════════════════════════════════ SCREEN 3 ════════════════════════════════ -->
+<div class="page" id="s3">
+  <div class="inner-nav">
+    <div class="inner-logo">Data<em>Moda</em></div>
+    <div class="inner-links">
+      <span class="cur">Resultados</span><span>Historial</span><span>Configuración</span>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="screen-label">
+      <span class="screen-label-num">Pantalla 03</span>
+      <span class="screen-label-title">Resultados de predicción</span>
+    </div>
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Poleras · Q4 2025</div>
+        <div class="chart-sub">Demanda estimada por regresión lineal</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blush-deep);"></div>Real</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--sage-deep);"></div>Proyección</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg width="100%" viewBox="0 0 1100 180" style="display:block; overflow:visible;">
+        <line x1="0" y1="20"  x2="1100" y2="20"  stroke="#E8E0D5" stroke-width="0.8"/>
+        <line x1="0" y1="60"  x2="1100" y2="60"  stroke="#E8E0D5" stroke-width="0.8"/>
+        <line x1="0" y1="100" x2="1100" y2="100" stroke="#E8E0D5" stroke-width="0.8"/>
+        <line x1="0" y1="140" x2="1100" y2="140" stroke="#E8E0D5" stroke-width="0.8"/>
+        <!-- Real fill -->
+        <polygon points="0,150 160,134 320,122 480,105 640,95 800,78 800,155 0,155" fill="#F0D9D4" opacity="0.7"/>
+        <!-- Proj fill -->
+        <polygon points="640,95 800,78 900,60 1000,42 1100,25 1100,155 640,155" fill="#D8E5D6" opacity="0.6"/>
+        <!-- Real line -->
+        <polyline points="0,150 160,134 320,122 480,105 640,95 800,78" fill="none" stroke="#B07060" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Proj line -->
+        <polyline points="800,78 900,60 1000,42 1100,25" fill="none" stroke="#6A9964" stroke-width="3" stroke-dasharray="9,5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Divider -->
+        <line x1="720" y1="12" x2="720" y2="155" stroke="#C8BDB0" stroke-width="1" stroke-dasharray="5,4"/>
+        <text x="728" y="25" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">proyección →</text>
+        <!-- Dots real -->
+        <circle cx="0"   cy="150" r="5" fill="#B07060"/>
+        <circle cx="160" cy="134" r="5" fill="#B07060"/>
+        <circle cx="320" cy="122" r="5" fill="#B07060"/>
+        <circle cx="480" cy="105" r="5" fill="#B07060"/>
+        <circle cx="640" cy="95"  r="5" fill="#B07060"/>
+        <circle cx="800" cy="78"  r="6" fill="#B07060" stroke="white" stroke-width="2.5"/>
+        <!-- Dots proj -->
+        <circle cx="900"  cy="60"  r="5" fill="#6A9964"/>
+        <circle cx="1000" cy="42"  r="5" fill="#6A9964"/>
+        <circle cx="1100" cy="25"  r="6" fill="#6A9964" stroke="white" stroke-width="2.5"/>
+        <!-- X labels -->
+        <text x="0"    y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Jul</text>
+        <text x="148"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Ago</text>
+        <text x="308"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Sep</text>
+        <text x="468"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Oct</text>
+        <text x="628"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Nov</text>
+        <text x="788"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Dic</text>
+        <text x="884"  y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Ene ↗</text>
+        <text x="984"  y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Feb ↗</text>
+        <text x="1078" y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Mar</text>
+      </svg>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card rose">
+        <div class="kpi-label">Unidades sugeridas</div>
+        <div class="kpi-val">1.200 <span class="kpi-unit" style="font-size:18px;">uds</span></div>
+        <div class="kpi-note" style="color:var(--blush-deep);">Regresión base</div>
+      </div>
+      <div class="kpi-card sage">
+        <div class="kpi-label">Margen de seguridad</div>
+        <div class="kpi-val">+100 <span class="kpi-unit" style="font-size:18px;">uds</span></div>
+        <div class="kpi-note" style="color:var(--sage-deep);">Buffer incluido</div>
+      </div>
+      <div class="kpi-card white">
+        <div class="kpi-label">Confianza del modelo</div>
+        <div class="kpi-val">94 <span class="kpi-unit">%</span></div>
+        <div class="kpi-note" style="color:var(--ink-light);">R² = 0.94</div>
+      </div>
+    </div>
+    <div class="rec-strip"><strong>Recomendación:</strong> producir entre 1.150 y 1.300 unidades. La tendencia ascendente en los últimos 3 meses sugiere mayor demanda hacia el Q1 2026.</div>
+    <button class="btn btn-ink btn-full">Aplicar ajuste dinámico →</button>
+  </div>
+  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div></div>
+</div>
+
+<!-- ════════════════════════════════ SCREEN 4 ════════════════════════════════ -->
+<div class="page" id="s4">
+  <div class="inner-nav">
+    <div class="inner-logo">Data<em>Moda</em></div>
+    <div class="inner-links">
+      <span class="cur">Ajuste dinámico</span><span>Historial</span><span>Configuración</span>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="screen-label">
+      <span class="screen-label-num">Pantalla 04</span>
+      <span class="screen-label-title">Ajuste dinámico · CU002</span>
+    </div>
+    <div class="page-heading">Sensibilidad de demanda</div>
+    <div class="page-sub">Ajusta el nivel de cobertura según tu tolerancia al riesgo de sobrestock.</div>
+    <div class="sens-list">
+      <div class="sens-opt">
+        <div class="sens-radio"></div>
+        <div class="sens-info">
+          <div class="sens-name">Baja</div>
+          <div class="sens-desc">Producción conservadora · Menor riesgo de inventario no vendido</div>
+        </div>
+        <span class="sens-badge low">1.050 uds</span>
+      </div>
+      <div class="sens-opt active">
+        <div class="sens-radio"><div class="sens-radio-dot"></div></div>
+        <div class="sens-info">
+          <div class="sens-name">Media</div>
+          <div class="sens-desc">Balance óptimo entre cobertura de demanda y eficiencia</div>
+        </div>
+        <span class="sens-badge mid">1.350 uds</span>
+      </div>
+      <div class="sens-opt">
+        <div class="sens-radio"></div>
+        <div class="sens-info">
+          <div class="sens-name">Alta</div>
+          <div class="sens-desc">Máxima cobertura · Mayor inversión en producción</div>
+        </div>
+        <span class="sens-badge high">1.600 uds</span>
+      </div>
+    </div>
+    <div class="result-box">
+      <div>
+        <div class="result-label">Nueva propuesta</div>
+        <div class="result-val">1.350 <span class="result-unit">unidades</span></div>
+      </div>
+      <div class="result-delta">+12,5% vs base</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline">← Volver</button>
+      <button class="btn btn-sage">Confirmar ajuste →</button>
+    </div>
+  </div>
+  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div></div>
+</div>
+
+<!-- ════════════════════════════════ SCREEN 5 ════════════════════════════════ -->
+<div class="page" id="s5">
+  <div class="inner-nav">
+    <div class="inner-logo">Data<em>Moda</em></div>
+    <div class="inner-links">
+      <span class="cur">Plan final</span><span>Historial</span><span>Configuración</span>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="screen-label">
+      <span class="screen-label-num">Pantalla 05</span>
+      <span class="screen-label-title">Plan de producción · Optimización final</span>
+    </div>
+    <div class="page-heading">Comparación de modelos</div>
+    <div class="page-sub">Resultado consolidado de todos los modelos aplicados al análisis.</div>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Modelo aplicado</th>
+          <th>Unidades</th>
+          <th>Variación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Regresión lineal base</td><td>1.200</td><td><span class="comp-delta">base</span></td></tr>
+        <tr><td>Ajuste dinámico (sensibilidad media)</td><td>1.350</td><td><span class="comp-delta">+12,5%</span></td></tr>
+        <tr><td>Stock de seguridad</td><td>+150</td><td><span class="comp-delta">buffer</span></td></tr>
+        <tr class="hl"><td>Total recomendado</td><td>1.500</td><td><span class="comp-delta">+25%</span></td></tr>
+      </tbody>
+    </table>
+    <div class="final-banner">
+      <div>
+        <div class="fb-eyebrow">Plan de producción final</div>
+        <div class="fb-num">1.500 <span class="fb-unit">unidades</span></div>
+      </div>
+      <div class="fb-right">
+        <div class="fb-cat">Poleras · OI 2025</div>
+        <div class="fb-date">Análisis completado hoy</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline">← Ajustar parámetros</button>
+      <button class="btn btn-ink">Confirmar plan de producción →</button>
+    </div>
+  </div>
+  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div></div>
+</div>
+
+</body>
+</html>
+<script>
+  // Capturamos el botón de la Pantalla 02
+  const btnAnalizar = document.querySelector('#s2 .btn-ink');
+  
+  btnAnalizar.addEventListener('click', async () => {
+      // Cambiamos el texto para dar feedback visual
+      btnAnalizar.innerText = "Procesando...";
+      btnAnalizar.style.opacity = "0.7";
+
+      try {
+          // Simulamos el envío de un formulario con un archivo
+          const formData = new FormData();
+          formData.append("archivoVentas", new Blob(["datos de prueba"], { type: "text/csv" }), "ventas.csv");
+
+          // Llamamos a la API que creamos en Node.js
+          const respuesta = await fetch('/api/analizar', {
+              method: 'POST',
+              body: formData
+          });
+
+          const datos = await respuesta.json();
+          console.log("Respuesta del servidor:", datos);
+          
+          // Si es exitoso, navegamos a la Pantalla 03
+          window.location.hash = "#s3";
+          
+      } catch (error) {
+          console.error("Error al analizar:", error);
+          alert("Hubo un error al procesar el archivo.");
+      } finally {
+          btnAnalizar.innerText = "Analizar archivo →";
+          btnAnalizar.style.opacity = "1";
+      }
+  });
+</script>
