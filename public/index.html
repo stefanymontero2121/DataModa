@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataModa — Mockups</title>
+<title>DataModa — Sistema de Optimización Textil</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -22,608 +22,602 @@
     --mauve-deep: #8B5EA8;
     --mauve-text: #3E1F5C;
     --dust:       #E8E0D5;
-    --dust-mid:   #C8BDB0;
-    --dust-text:  #4A3D30;
-    --ink:        #1C1510;
-    --ink-mid:    #4A3D30;
-    --ink-light:  #8A7A68;
-    --white:      #FFFFFF;
-    --error:      #C45050;
-    --error-bg:   #FBF0EE;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: #E8E2DA; font-family: 'Jost', sans-serif; color: var(--ink); }
-
-  /* ── PAGE WRAPPER ── */
-  .page {
-    width: 1280px;
-    min-height: 100vh;
-    margin: 0 auto 80px;
-    background: var(--cream);
-    box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+    --dust-deep:  #CFC4B6;
+    --ink:        #1C1B1A;
+    --ink-light:  #6E6A64;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-sans:  'Jost', sans-serif;
   }
 
-  /* ── APP NAV ── */
-  .app-nav {
-    background: var(--parchment);
-    border-bottom: 1px solid var(--dust);
-    height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 56px;
-    position: sticky; top: 0; z-index: 10;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 20px;
   }
-  .app-logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; letter-spacing: 0.06em; color: var(--ink); }
-  .app-logo em { color: var(--blush-deep); font-style: italic; }
-  .nav-links { display: flex; gap: 36px; }
-  .nav-links a { font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); text-decoration: none; }
-  .nav-links a.active { color: var(--blush-deep); }
 
-  /* ── SCREEN SECTION ── */
+  /* Contenedor central estricto de los mockups */
+  .app-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: #FFF;
+    border: 1px solid var(--dust-deep);
+    border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.03);
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Control de visibilidad por Hash */
   .screen-section {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    border-bottom: 1px solid var(--dust);
+    display: none;
+    flex: 1;
+    padding: 60px 80px 80px 80px;
+  }
+  .screen-section:target {
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── INNER NAV BAR (sub-nav inside each screen) ── */
-  .inner-nav {
-    background: var(--cream);
-    border-bottom: 1px solid var(--dust);
-    height: 52px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 56px;
+  /* Cabeceras de estilo editorial */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--parchment);
+    padding-bottom: 18px;
+    margin-bottom: 45px;
   }
-  .inner-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--ink); }
-  .inner-logo em { color: var(--blush-deep); font-style: italic; }
-  .inner-links { display: flex; gap: 28px; }
-  .inner-links span { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); }
-  .inner-links span.cur { color: var(--blush-deep); }
-
-  /* ── BODY AREA ── */
-  .screen-body { flex: 1; padding: 56px; }
-  .screen-body-wide { flex: 1; padding: 56px 56px 56px; }
-
-  /* ── SCREEN LABEL ── */
-  .screen-label {
-    display: flex; align-items: center; gap: 16px; margin-bottom: 48px;
+  .brand {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
   }
-  .screen-label-num {
-    font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400;
-    color: var(--ink-light); letter-spacing: 0.1em;
-    border: 1px solid var(--dust-mid); border-radius: 20px; padding: 3px 14px;
-  }
-  .screen-label-title {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--blush-deep);
+  .meta-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
   }
 
-  /* ── PAGE HEADING ── */
-  .page-heading { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--ink); margin-bottom: 6px; }
-  .page-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 40px; }
+  /* Tipografías del diseño original */
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+  }
+  h1 i { font-style: italic; font-weight: 300; }
+  h2 { font-family: var(--font-serif); font-size: 32px; font-weight: 400; margin-bottom: 35px; }
+  p.subtitle { font-size: 15px; color: var(--ink-light); max-width: 460px; line-height: 1.5; margin-bottom: 35px; }
 
-  /* ── FORM ── */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-  .field { display: flex; flex-direction: column; gap: 7px; }
-  .field-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mid); }
-  .field-select-wrap { position: relative; }
+  /* Diseños estructurales de rejillas */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; flex: 1; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+
+  /* Botones elegantes */
+  .btn-ink {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--ink);
+    color: var(--cream);
+    padding: 12px 26px;
+    border: none;
+    border-radius: 20px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
+    transition: background-color 0.2s;
+  }
+  .btn-ink:hover { background-color: var(--blush-deep); }
+
+  /* Elementos de Formulario */
+  .field-group { margin-bottom: 24px; }
+  .field-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
   .field-select {
-    width: 100%; background: var(--parchment); border: 1px solid var(--dust);
-    border-radius: 12px; padding: 13px 16px; font-size: 14px;
-    font-family: 'Jost', sans-serif; color: var(--ink); appearance: none;
-  }
-  .field-select-wrap::after {
-    content: ''; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-    width: 0; height: 0; border-left: 5px solid transparent;
-    border-right: 5px solid transparent; border-top: 6px solid var(--ink-light);
-    pointer-events: none;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--dust-deep);
+    background-color: var(--cream);
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
   }
 
-  /* ── BUTTONS ── */
-  .btn { border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 14px; transition: opacity .15s; }
-  .btn:hover { opacity: .88; }
-  .btn-ink { background: var(--ink); color: var(--cream); font-size: 13px; padding: 16px 32px; }
-  .btn-full { width: 100%; }
-  .btn-outline { background: transparent; border: 1px solid var(--dust-mid); color: var(--ink-mid); font-size: 13px; padding: 15px 32px; }
-  .btn-sage { background: var(--sage-deep); color: white; font-size: 13px; padding: 16px 32px; }
-  .btn-row { display: flex; gap: 14px; }
-  .btn-row > * { flex: 1; }
-
-  /* ── PROGRESS ── */
-  .progress { display: flex; align-items: center; gap: 0; margin-bottom: 48px; }
-  .prog-step { display: flex; align-items: center; gap: 10px; }
-  .prog-circle {
-    width: 32px; height: 32px; border-radius: 50%; font-size: 12px; font-weight: 500;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .prog-circle.done  { background: var(--blush-deep); color: white; }
-  .prog-circle.active { background: var(--ink); color: white; }
-  .prog-circle.idle  { background: transparent; border: 1.5px solid var(--dust-mid); color: var(--ink-light); }
-  .prog-name { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
-  .prog-name.active { color: var(--ink); font-weight: 500; }
-  .prog-line { width: 48px; height: 1px; background: var(--dust-mid); flex-shrink: 0; }
-
-  /* ── UPLOAD ── */
+  /* Dropzone CSV */
   .upload-zone {
-    border: 1.5px dashed var(--blush-mid); border-radius: 16px; background: var(--blush);
-    padding: 52px 32px; text-align: center; margin-bottom: 20px;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    border: 1px dashed var(--dust-deep);
+    background-color: var(--cream);
+    border-radius: 6px;
+    padding: 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    cursor: pointer;
   }
-  .upload-icon-box {
-    width: 60px; height: 60px; background: var(--white); border-radius: 16px;
-    border: 1px solid var(--blush-mid); display: flex; align-items: center; justify-content: center;
-  }
-  .upload-icon-box svg { width: 26px; height: 26px; stroke: var(--blush-deep); fill: none; stroke-width: 1.5; }
-  .upload-title { font-size: 16px; font-weight: 500; color: var(--blush-text); }
-  .upload-sub   { font-size: 13px; color: var(--blush-deep); opacity: 0.8; }
-  .file-chip {
-    display: flex; align-items: center; gap: 14px; background: var(--white);
-    border: 1px solid var(--dust); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
-  }
-  .file-chip-icon { width: 38px; height: 38px; background: var(--sage); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--sage-text); }
-  .file-chip-name { font-size: 13px; font-weight: 500; color: var(--ink); }
-  .file-chip-size { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
-  .error-alert {
-    display: flex; align-items: flex-start; gap: 12px;
-    background: var(--error-bg); border: 1px solid #F0C0C0; border-radius: 12px;
-    padding: 14px 18px; margin-bottom: 20px;
-  }
-  .error-icon { width: 20px; height: 20px; background: var(--error); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-  .error-icon span { font-size: 11px; font-weight: 700; color: white; }
-  .error-text { font-size: 13px; color: var(--error); line-height: 1.7; }
+  .upload-icon { font-size: 20px; margin-bottom: 10px; color: var(--blush-deep); }
 
-  /* ── CHART ── */
-  .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-  .chart-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--ink); }
-  .chart-sub { font-size: 12px; color: var(--ink-light); margin-top: 3px; }
-  .legend { display: flex; gap: 20px; }
-  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink-light); }
-  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-  .chart-wrap { background: var(--parchment); border-radius: 16px; padding: 24px 20px 16px; margin-bottom: 24px; }
+  /* Tarjetas KPI fijas */
+  .kpi-card { padding: 22px; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi-card.blush { background-color: var(--blush); color: var(--blush-text); }
+  .kpi-card.sage { background-color: var(--sage); color: var(--sage-text); }
+  .kpi-card.mauve { background-color: var(--mauve); color: var(--mauve-text); }
+  .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+  .kpi-val { font-size: 30px; font-weight: 500; margin-top: 4px; }
+  .kpi-val span { font-size: 13px; font-weight: 400; opacity: 0.7; }
 
-  /* ── KPIS ── */
-  .kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
-  .kpi-card { border-radius: 16px; padding: 20px 22px; border: 1px solid transparent; }
-  .kpi-card.rose { background: var(--blush); border-color: var(--blush-mid); }
-  .kpi-card.sage { background: var(--sage);  border-color: var(--sage-mid); }
-  .kpi-card.white { background: var(--white); border-color: var(--dust); }
-  .kpi-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
-  .kpi-card.rose  .kpi-label { color: var(--blush-deep); }
-  .kpi-card.sage  .kpi-label { color: var(--sage-deep); }
-  .kpi-card.white .kpi-label { color: var(--ink-light); }
-  .kpi-val { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; line-height: 1; }
-  .kpi-card.rose  .kpi-val { color: var(--blush-text); }
-  .kpi-card.sage  .kpi-val { color: var(--sage-text); }
-  .kpi-card.white .kpi-val { color: var(--ink); }
-  .kpi-unit { font-size: 16px; color: inherit; opacity: 0.6; }
-  .kpi-note { font-size: 12px; margin-top: 6px; opacity: 0.75; }
+  /* Contenedores de Gráficos */
+  .chart-wrap { border: 1px solid var(--dust); border-radius: 6px; padding: 24px; background-color: #FFF; }
+  .chart-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; font-size: 12px; color: var(--ink-light); }
 
-  /* ── REC STRIP ── */
-  .rec-strip {
-    border-left: 3px solid var(--mauve-deep); background: var(--mauve);
-    padding: 14px 20px; font-size: 13px; color: var(--mauve-text);
-    line-height: 1.7; margin-bottom: 24px; border-radius: 0 12px 12px 0;
-  }
-
-  /* ── SENSITIVITY ── */
-  .sens-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  /* --- INTERACTIVIDAD POR COLOR DE TARJETAS DE SENSIBILIDAD --- */
   .sens-opt {
-    display: flex; align-items: center; gap: 16px;
-    border: 1px solid var(--dust); border-radius: 14px; padding: 18px 22px;
-    background: var(--white);
+    border: 1px solid var(--dust-deep);
+    background-color: #FFF;
+    border-radius: 6px;
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
   }
-  .sens-opt.active { border-color: var(--mauve-deep); background: var(--mauve); }
-  .sens-radio { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--dust-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-  .sens-opt.active .sens-radio { border-color: var(--mauve-deep); background: var(--mauve-deep); }
-  .sens-radio-dot { width: 7px; height: 7px; background: white; border-radius: 50%; }
-  .sens-info { flex: 1; }
-  .sens-name { font-size: 14px; font-weight: 500; color: var(--ink); }
-  .sens-desc { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
-  .sens-opt.active .sens-name { color: var(--mauve-text); }
-  .sens-opt.active .sens-desc { color: var(--mauve-deep); }
-  .sens-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
-  .sens-badge.low  { background: var(--sage);  color: var(--sage-text); }
-  .sens-badge.mid  { background: var(--blush); color: var(--blush-text); }
-  .sens-badge.high { background: var(--mauve); color: var(--mauve-text); }
+  .sens-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .sens-desc { font-size: 12px; color: var(--ink-light); line-height: 1.4; }
 
+  /* Conservador -> Se activa Blush */
+  .sens-opt#optLow.active { background-color: var(--blush); border-color: var(--blush-mid); }
+  .sens-opt#optLow.active .sens-name { color: var(--blush-text); }
+  .sens-opt#optLow.active .sens-desc { color: var(--blush-text); opacity: 0.9; }
+
+  /* Neutro -> Se activa Parchment */
+  .sens-opt#optMid.active { background-color: var(--parchment); border-color: var(--dust-deep); }
+  .sens-opt#optMid.active .sens-name { color: var(--ink); }
+  .sens-opt#optMid.active .sens-desc { color: var(--ink-light); }
+
+  /* Reactivo -> Se activa Sage */
+  .sens-opt#optHigh.active { background-color: var(--sage); border-color: var(--sage-mid); }
+  .sens-opt#optHigh.active .sens-name { color: var(--sage-text); }
+  .sens-opt#optHigh.active .sens-desc { color: var(--sage-text); opacity: 0.9; }
+
+  /* Bloques de Resultados de Contraste */
   .result-box {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--parchment); border: 1px solid var(--dust);
-    border-radius: 16px; padding: 22px 28px; margin-bottom: 24px;
+    background-color: var(--parchment);
+    padding: 22px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .result-label { font-size: 11px; color: var(--ink-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-  .result-val { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--ink); line-height: 1; }
-  .result-unit { font-size: 20px; color: var(--ink-light); }
-  .result-delta { background: var(--sage); color: var(--sage-text); border-radius: 20px; padding: 8px 18px; font-size: 14px; font-weight: 500; }
+  .result-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-light); }
 
-  /* ── COMPARE TABLE ── */
-  .comp-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-  .comp-table th { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); padding: 0 20px 12px; text-align: left; }
-  .comp-table th:last-child { text-align: right; }
-  .comp-table td { padding: 14px 20px; border-top: 1px solid var(--dust); font-size: 14px; color: var(--ink-mid); vertical-align: middle; }
-  .comp-table td:last-child { text-align: right; }
-  .comp-table tr.hl td { background: var(--blush); color: var(--blush-text); font-weight: 500; }
-  .comp-delta { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: var(--dust); color: var(--dust-text); }
-  .hl .comp-delta { background: var(--blush-mid); color: var(--blush-text); }
+  /* Indicadores Inferiores de Página (Burbujas) */
+  .page-indicator { position: absolute; bottom: 30px; left: 80px; display: flex; gap: 8px; }
+  .page-dot { width: 6px; height: 6px; border-radius: 50%; background-color: var(--dust-deep); }
+  .page-dot.active { background-color: var(--ink); width: 18px; border-radius: 3px; }
 
-  /* ── FINAL BANNER ── */
-  .final-banner {
-    background: var(--ink); border-radius: 18px; padding: 30px 36px;
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 24px;
+  /* Bloque Decorativo de Líneas en Pantalla 1 */
+  .rec-strip {
+    height: 100%;
+    background-color: var(--parchment);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
   }
-  .fb-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust-mid); margin-bottom: 8px; }
-  .fb-num { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--cream); line-height: 1; }
-  .fb-unit { font-size: 22px; color: var(--blush-mid); }
-  .fb-right { text-align: right; }
-  .fb-cat { font-size: 13px; color: var(--blush-mid); margin-bottom: 4px; }
-  .fb-date { font-size: 12px; color: var(--ink-light); }
-
-  /* ── PAGE INDICATOR ── */
-  .page-indicator {
-    display: flex; justify-content: center; gap: 8px; padding: 24px 0 8px;
-  }
-  .page-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dust-mid); }
-  .page-dot.active { background: var(--blush-deep); width: 24px; border-radius: 3px; }
-
-  /* Hero bars decoration */
-  .hero-bars { display: flex; align-items: flex-end; gap: 8px; }
-  .hbar { border-radius: 4px 4px 0 0; }
+  .strip-title { font-family: var(--font-serif); font-size: 26px; color: var(--blush-text); }
+  .strip-footer { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-light); }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════ SCREEN 1 ════════════════════════════════ -->
-<div class="page" id="s1">
-  <nav class="app-nav">
-    <div class="app-logo">Data<em>Moda</em></div>
-    <div class="nav-links">
-      <a href="#s1" class="active">Análisis</a>
-      <a href="#s2">Carga</a>
-      <a href="#s3">Predicción</a>
-      <a href="#s4">Ajuste</a>
-      <a href="#s5">Plan final</a>
-    </div>
-  </nav>
+<div class="app-container">
 
-  <!-- Hero -->
-  <div style="background:var(--parchment); padding:80px 56px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; border-bottom:1px solid var(--dust);">
-    <div>
-      <div style="font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--blush-deep); margin-bottom:20px;">Plataforma de optimización textil</div>
-      <h1 style="font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:300; line-height:1.1; color:var(--ink); margin-bottom:20px;">
-        Predice.<br>Ajusta.<br><em style="color:var(--blush-deep); font-style:italic;">Produce.</em>
-      </h1>
-      <p style="font-size:15px; color:var(--ink-light); line-height:1.9; max-width:440px; margin-bottom:36px;">Sistema inteligente que analiza tus datos históricos de ventas para calcular la cantidad óptima de prendas a producir, reduciendo sobrestock y maximizando eficiencia.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <span style="background:var(--blush); color:var(--blush-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Predicción de demanda</span>
-        <span style="background:var(--sage); color:var(--sage-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Regresión lineal</span>
-        <span style="background:var(--mauve); color:var(--mauve-text); padding:6px 16px; border-radius:40px; font-size:11px; font-weight:500; letter-spacing:0.08em;">Ajuste dinámico</span>
+  <section id="s1" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag">Módulo de Inteligencia de Inventarios — UV</div>
+    </header>
+    <div class="grid-2">
+      <div style="display: flex; flex-direction: column; justify-content: center;">
+        <h1>Modelamiento predictivo de demanda <i>textil</i>.</h1>
+        <p class="subtitle">Optimización algorítmica de inventarios y stock de seguridad para la mitigación del riesgo ambiental y sobreproducción de prendas.</p>
+        <a href="#s2" class="btn-ink">Configurar variables →</a>
       </div>
-    </div>
-    <div style="display:flex; gap:10px; align-items:flex-end; justify-content:center;">
-      <div class="hero-bars">
-        <div class="hbar" style="width:32px; height:70px; background:var(--blush);"></div>
-        <div class="hbar" style="width:32px; height:100px; background:var(--blush-mid);"></div>
-        <div class="hbar" style="width:32px; height:82px; background:var(--blush);"></div>
-        <div class="hbar" style="width:32px; height:126px; background:var(--blush-mid);"></div>
-        <div class="hbar" style="width:32px; height:96px; background:var(--blush);"></div>
-        <div class="hbar" style="width:32px; height:156px; background:var(--blush-deep);"></div>
-        <div class="hbar" style="width:32px; height:136px; background:var(--blush-mid);"></div>
-        <div class="hbar" style="width:32px; height:180px; background:var(--blush-deep);"></div>
-      </div>
-      <div class="hero-bars" style="margin-left:16px;">
-        <div class="hbar" style="width:32px; height:60px; background:var(--sage);"></div>
-        <div class="hbar" style="width:32px; height:90px; background:var(--sage-mid);"></div>
-        <div class="hbar" style="width:32px; height:116px; background:var(--sage-mid);"></div>
-        <div class="hbar" style="width:32px; height:148px; background:var(--sage-deep);"></div>
-        <div class="hbar" style="width:32px; height:124px; background:var(--sage-mid);"></div>
-        <div class="hbar" style="width:32px; height:172px; background:var(--sage-deep);"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Form area -->
-  <div class="inner-nav">
-    <div class="inner-logo">Data<em>Moda</em></div>
-    <div class="inner-links">
-      <span class="cur">Análisis</span><span>Historial</span><span>Configuración</span>
-    </div>
-  </div>
-  <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 01</span>
-      <span class="screen-label-title">Pantalla principal</span>
-    </div>
-    <div class="page-heading">Nuevo análisis de demanda</div>
-    <div class="page-sub">Configura los parámetros antes de cargar tus datos históricos de ventas.</div>
-    <div class="form-grid">
-      <div class="field"><label class="field-label">Categoría de prenda</label>
-        <div class="field-select-wrap"><select class="field-select"><option>Poleras</option><option>Pantalones</option><option>Chaquetas</option><option>Vestidos</option></select></div>
-      </div>
-      <div class="field"><label class="field-label">Temporada</label>
-        <div class="field-select-wrap"><select class="field-select"><option>Otoño · Invierno 2025</option><option>Primavera · Verano 2025</option><option>Otoño · Invierno 2026</option></select></div>
-      </div>
-      <div class="field"><label class="field-label">Mercado objetivo</label>
-        <div class="field-select-wrap"><select class="field-select"><option>Chile · Nacional</option><option>Latinoamérica</option><option>Exportación</option></select></div>
-      </div>
-      <div class="field"><label class="field-label">Período de análisis</label>
-        <div class="field-select-wrap"><select class="field-select"><option>Últimos 12 meses</option><option>Últimos 24 meses</option><option>Últimos 36 meses</option></select></div>
-      </div>
-    </div>
-    <button class="btn btn-ink btn-full" style="margin-top:8px;">Cargar datos de ventas →</button>
-  </div>
-  <div class="page-indicator"><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div></div>
-</div>
-
-<!-- ════════════════════════════════ SCREEN 2 ════════════════════════════════ -->
-<div class="page" id="s2">
-  <div class="inner-nav">
-    <div class="inner-logo">Data<em>Moda</em></div>
-    <div class="inner-links">
-      <span class="cur">Carga de datos</span><span>Historial</span><span>Configuración</span>
-    </div>
-  </div>
-  <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 02</span>
-      <span class="screen-label-title">Carga y validación · CU001</span>
-    </div>
-    <div class="progress">
-      <div class="prog-step"><div class="prog-circle done">✓</div><div class="prog-name">Configuración</div></div>
-      <div class="prog-line"></div>
-      <div class="prog-step"><div class="prog-circle active">2</div><div class="prog-name active">Carga de datos</div></div>
-      <div class="prog-line"></div>
-      <div class="prog-step"><div class="prog-circle idle">3</div><div class="prog-name">Análisis</div></div>
-      <div class="prog-line"></div>
-      <div class="prog-step"><div class="prog-circle idle">4</div><div class="prog-name">Resultados</div></div>
-    </div>
-    <div class="upload-zone">
-      <div class="upload-icon-box">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      </div>
-      <div class="upload-title">Arrastra tu archivo aquí</div>
-      <div class="upload-sub">Formatos permitidos: CSV, XLSX · Tamaño máximo: 10 MB</div>
-    </div>
-    <div class="file-chip">
-      <div class="file-chip-icon">CSV</div>
       <div>
-        <div class="file-chip-name">historial_ventas_Q3_2025.csv</div>
-        <div class="file-chip-size">2.4 MB · Subido hace 2 min</div>
+        <div class="rec-strip">
+          <div class="strip-title">Hacia una producción consciente y responsable.</div>
+          <div class="strip-footer">Universidad de Valparaíso — 2026</div>
+        </div>
       </div>
     </div>
-    <div class="error-alert">
-      <div class="error-icon"><span>!</span></div>
-      <div class="error-text"><strong>Formato inválido:</strong> El archivo no contiene las columnas requeridas: <em>fecha, categoría, unidades_vendidas.</em></div>
+    <div class="page-indicator">
+      <div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div>
     </div>
-    <button class="btn btn-ink btn-full">Analizar archivo →</button>
-  </div>
-  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div></div>
-</div>
+  </section>
 
-<!-- ════════════════════════════════ SCREEN 3 ════════════════════════════════ -->
-<div class="page" id="s3">
-  <div class="inner-nav">
-    <div class="inner-logo">Data<em>Moda</em></div>
-    <div class="inner-links">
-      <span class="cur">Resultados</span><span>Historial</span><span>Configuración</span>
-    </div>
-  </div>
-  <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 03</span>
-      <span class="screen-label-title">Resultados de predicción</span>
-    </div>
-    <div class="chart-header">
+  <section id="s2" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag"><a href="#s1" style="color: inherit; text-decoration: none;">← Volver al inicio</a></div>
+    </header>
+    <h2>Carga de variables e historial</h2>
+    <div class="grid-2">
       <div>
-        <div class="chart-title">Poleras · Q4 2025</div>
-        <div class="chart-sub">Demanda estimada por regresión lineal</div>
+        <div class="field-group">
+          <label class="field-label">Línea de prenda</label>
+          <select class="field-select" id="selectPrenda">
+            <option>Vestidos de Alta Costura</option>
+            <option>Chaquetas de Mezclilla Denim</option>
+            <option>Blusas de Lino Orgánico</option>
+          </select>
+        </div>
+        <div class="field-group" style="margin-bottom: 40px;">
+          <label class="field-label">Categoría de colección</label>
+          <select class="field-select" id="selectCategoria">
+            <option>Temporada Primavera-Verano</option>
+            <option>Temporada Otoño-Invierno</option>
+            <option>Colección Permanente</option>
+          </select>
+        </div>
+        <button id="btnAnalizar" class="btn-ink">Analizar archivo →</button>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blush-deep);"></div>Real</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--sage-deep);"></div>Proyección</div>
+      <div>
+        <label class="field-label">Historial de ventas futuras (.csv)</label>
+        <div class="upload-zone" id="dropZone">
+          <div class="upload-icon">✦</div>
+          <p style="font-size: 13px; margin-bottom: 4px;">Selecciona tu archivo de demanda histórico</p>
+          <p style="font-size: 11px; color: var(--ink-light);">Formatos soportados: CSV con registros continuos</p>
+        </div>
       </div>
     </div>
-    <div class="chart-wrap">
-      <svg width="100%" viewBox="0 0 1100 180" style="display:block; overflow:visible;">
-        <line x1="0" y1="20"  x2="1100" y2="20"  stroke="#E8E0D5" stroke-width="0.8"/>
-        <line x1="0" y1="60"  x2="1100" y2="60"  stroke="#E8E0D5" stroke-width="0.8"/>
-        <line x1="0" y1="100" x2="1100" y2="100" stroke="#E8E0D5" stroke-width="0.8"/>
-        <line x1="0" y1="140" x2="1100" y2="140" stroke="#E8E0D5" stroke-width="0.8"/>
-        <!-- Real fill -->
-        <polygon points="0,150 160,134 320,122 480,105 640,95 800,78 800,155 0,155" fill="#F0D9D4" opacity="0.7"/>
-        <!-- Proj fill -->
-        <polygon points="640,95 800,78 900,60 1000,42 1100,25 1100,155 640,155" fill="#D8E5D6" opacity="0.6"/>
-        <!-- Real line -->
-        <polyline points="0,150 160,134 320,122 480,105 640,95 800,78" fill="none" stroke="#B07060" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-        <!-- Proj line -->
-        <polyline points="800,78 900,60 1000,42 1100,25" fill="none" stroke="#6A9964" stroke-width="3" stroke-dasharray="9,5" stroke-linejoin="round" stroke-linecap="round"/>
-        <!-- Divider -->
-        <line x1="720" y1="12" x2="720" y2="155" stroke="#C8BDB0" stroke-width="1" stroke-dasharray="5,4"/>
-        <text x="728" y="25" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">proyección →</text>
-        <!-- Dots real -->
-        <circle cx="0"   cy="150" r="5" fill="#B07060"/>
-        <circle cx="160" cy="134" r="5" fill="#B07060"/>
-        <circle cx="320" cy="122" r="5" fill="#B07060"/>
-        <circle cx="480" cy="105" r="5" fill="#B07060"/>
-        <circle cx="640" cy="95"  r="5" fill="#B07060"/>
-        <circle cx="800" cy="78"  r="6" fill="#B07060" stroke="white" stroke-width="2.5"/>
-        <!-- Dots proj -->
-        <circle cx="900"  cy="60"  r="5" fill="#6A9964"/>
-        <circle cx="1000" cy="42"  r="5" fill="#6A9964"/>
-        <circle cx="1100" cy="25"  r="6" fill="#6A9964" stroke="white" stroke-width="2.5"/>
-        <!-- X labels -->
-        <text x="0"    y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Jul</text>
-        <text x="148"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Ago</text>
-        <text x="308"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Sep</text>
-        <text x="468"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Oct</text>
-        <text x="628"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Nov</text>
-        <text x="788"  y="172" font-size="11" fill="#8A7A68" font-family="Jost,sans-serif">Dic</text>
-        <text x="884"  y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Ene ↗</text>
-        <text x="984"  y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Feb ↗</text>
-        <text x="1078" y="172" font-size="11" fill="#6A9964" font-family="Jost,sans-serif">Mar</text>
-      </svg>
+    <div class="page-indicator">
+      <div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div>
     </div>
-    <div class="kpi-row">
-      <div class="kpi-card rose">
-        <div class="kpi-label">Unidades sugeridas</div>
-        <div class="kpi-val">1.200 <span class="kpi-unit" style="font-size:18px;">uds</span></div>
-        <div class="kpi-note" style="color:var(--blush-deep);">Regresión base</div>
+  </section>
+
+  <section id="s3" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag" id="txtPrendaHeader">Análisis de Demanda Base</div>
+    </header>
+    <h2>Dashboard de Proyecciones</h2>
+    
+    <div class="grid-3">
+      <div class="kpi-card blush">
+        <div class="kpi-label">Predicción base (Regresión)</div>
+        <div class="kpi-val" id="valPrediccion">0 <span>uds</span></div>
+      </div>
+      <div class="kpi-card mauve">
+        <div class="kpi-label">Volatilidad histórica (σ)</div>
+        <div class="kpi-val" id="valVolatilidad">± 0 <span>uds</span></div>
       </div>
       <div class="kpi-card sage">
-        <div class="kpi-label">Margen de seguridad</div>
-        <div class="kpi-val">+100 <span class="kpi-unit" style="font-size:18px;">uds</span></div>
-        <div class="kpi-note" style="color:var(--sage-deep);">Buffer incluido</div>
-      </div>
-      <div class="kpi-card white">
-        <div class="kpi-label">Confianza del modelo</div>
-        <div class="kpi-val">94 <span class="kpi-unit">%</span></div>
-        <div class="kpi-note" style="color:var(--ink-light);">R² = 0.94</div>
+        <div class="kpi-label">Stock de seguridad sugerido</div>
+        <div class="kpi-val" id="valStockSeg">0 <span>uds</span></div>
       </div>
     </div>
-    <div class="rec-strip"><strong>Recomendación:</strong> producir entre 1.150 y 1.300 unidades. La tendencia ascendente en los últimos 3 meses sugiere mayor demanda hacia el Q1 2026.</div>
-    <button class="btn btn-ink btn-full">Aplicar ajuste dinámico →</button>
-  </div>
-  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div></div>
-</div>
 
-<!-- ════════════════════════════════ SCREEN 4 ════════════════════════════════ -->
-<div class="page" id="s4">
-  <div class="inner-nav">
-    <div class="inner-logo">Data<em>Moda</em></div>
-    <div class="inner-links">
-      <span class="cur">Ajuste dinámico</span><span>Historial</span><span>Configuración</span>
-    </div>
-  </div>
-  <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 04</span>
-      <span class="screen-label-title">Ajuste dinámico · CU002</span>
-    </div>
-    <div class="page-heading">Sensibilidad de demanda</div>
-    <div class="page-sub">Ajusta el nivel de cobertura según tu tolerancia al riesgo de sobrestock.</div>
-    <div class="sens-list">
-      <div class="sens-opt">
-        <div class="sens-radio"></div>
-        <div class="sens-info">
-          <div class="sens-name">Baja</div>
-          <div class="sens-desc">Producción conservadora · Menor riesgo de inventario no vendido</div>
-        </div>
-        <span class="sens-badge low">1.050 uds</span>
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <div>Comportamiento de demanda por periodos vs Siguiente ciclo estimado</div>
+        <div style="font-weight: 500;" id="labelColeccion">Colección</div>
       </div>
-      <div class="sens-opt active">
-        <div class="sens-radio"><div class="sens-radio-dot"></div></div>
-        <div class="sens-info">
-          <div class="sens-name">Media</div>
-          <div class="sens-desc">Balance óptimo entre cobertura de demanda y eficiencia</div>
-        </div>
-        <span class="sens-badge mid">1.350 uds</span>
+      <div id="graficoBarras" style="display: flex; align-items: flex-end; gap: 24px; height: 140px; padding-top: 10px;"></div>
+    </div>
+
+    <div style="text-align: right; margin-top: 35px;">
+      <a href="#s4" class="btn-ink" id="btnHaciaS4">Ajuste de sensibilidad →</a>
+    </div>
+    <div class="page-indicator">
+      <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div>
+    </div>
+  </section>
+
+  <section id="s4" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag">Optimización Adaptativa</div>
+    </header>
+    <h2>Ajuste dinámico del suavizado</h2>
+    <p class="subtitle" style="max-width: 100%; margin-bottom: 30px;">Selecciona el nivel de sensibilidad del algoritmo estadístico para equilibrar la tendencia calculada con picos imprevistos del mercado.</p>
+
+    <div class="grid-3" style="margin-bottom: 30px;">
+      <div class="sens-opt" id="optLow">
+        <div class="sens-name">Estable / Conservador</div>
+        <div class="sens-desc">Asigna un α menor. Atenúa las anomalías o compras impulsivas aisladas en tiendas.</div>
       </div>
-      <div class="sens-opt">
-        <div class="sens-radio"></div>
-        <div class="sens-info">
-          <div class="sens-name">Alta</div>
-          <div class="sens-desc">Máxima cobertura · Mayor inversión en producción</div>
-        </div>
-        <span class="sens-badge high">1.600 uds</span>
+      <div class="sens-opt active" id="optMid">
+        <div class="sens-name">Balanceado Neutro</div>
+        <div class="sens-desc">Ponderación simétrica óptima recomendada para el comportamiento regular de moda.</div>
+      </div>
+      <div class="sens-opt" id="optHigh">
+        <div class="sens-name">Reactivo Tendencia</div>
+        <div class="sens-desc">Asigna un α mayor. Reacciona velozmente a colecciones con alto impacto o virales.</div>
       </div>
     </div>
-    <div class="result-box">
+
+    <div class="result-box" style="margin-bottom: 35px;">
       <div>
-        <div class="result-label">Nueva propuesta</div>
-        <div class="result-val">1.350 <span class="result-unit">unidades</span></div>
+        <div class="result-label">Propuesta de demanda ajustada dinámicamente</div>
+        <div style="font-size: 12px; color: var(--ink-light); margin-top: 4px;">Fórmula de suavizado adaptativo en tiempo real</div>
       </div>
-      <div class="result-delta">+12,5% vs base</div>
+      <div style="text-align: right;">
+        <div class="kpi-val" id="valS4Ajustado" style="font-size: 32px; margin: 0; color: var(--ink);">0 <span>uds</span></div>
+        <div id="valS4Porcentaje" style="font-size: 12px; font-weight: 500; color: var(--blush-deep); margin-top: 2px;">0% de variación</div>
+      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-outline">← Volver</button>
-      <button class="btn btn-sage">Confirmar ajuste →</button>
-    </div>
-  </div>
-  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div></div>
-</div>
 
-<!-- ════════════════════════════════ SCREEN 5 ════════════════════════════════ -->
-<div class="page" id="s5">
-  <div class="inner-nav">
-    <div class="inner-logo">Data<em>Moda</em></div>
-    <div class="inner-links">
-      <span class="cur">Plan final</span><span>Historial</span><span>Configuración</span>
+    <div style="text-align: right;">
+      <a href="#s5" class="btn-ink" id="btnHaciaS5">Stock de Seguridad →</a>
     </div>
-  </div>
-  <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 05</span>
-      <span class="screen-label-title">Plan de producción · Optimización final</span>
+    <div class="page-indicator">
+      <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div>
     </div>
-    <div class="page-heading">Comparación de modelos</div>
-    <div class="page-sub">Resultado consolidado de todos los modelos aplicados al análisis.</div>
-    <table class="comp-table">
-      <thead>
-        <tr>
-          <th>Modelo aplicado</th>
-          <th>Unidades</th>
-          <th>Variación</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Regresión lineal base</td><td>1.200</td><td><span class="comp-delta">base</span></td></tr>
-        <tr><td>Ajuste dinámico (sensibilidad media)</td><td>1.350</td><td><span class="comp-delta">+12,5%</span></td></tr>
-        <tr><td>Stock de seguridad</td><td>+150</td><td><span class="comp-delta">buffer</span></td></tr>
-        <tr class="hl"><td>Total recomendado</td><td>1.500</td><td><span class="comp-delta">+25%</span></td></tr>
-      </tbody>
-    </table>
-    <div class="final-banner">
+  </section>
+
+  <section id="s5" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag">Análisis de Riesgo de Rotura</div>
+    </header>
+    <h2>Optimización Stock de Seguridad</h2>
+    <p class="subtitle" style="max-width: 100%; margin-bottom: 35px;">Mitigación activa del riesgo mediante amortiguación estadística. Evita quiebres de stock sin incurrir en acumulación excesiva de prendas.</p>
+
+    <div class="result-box" style="background-color: var(--mauve); padding: 30px; margin-bottom: 40px; border: none;">
       <div>
-        <div class="fb-eyebrow">Plan de producción final</div>
-        <div class="fb-num">1.500 <span class="fb-unit">unidades</span></div>
+        <div class="result-label" style="color: var(--mauve-text); font-weight: 500; font-size: 13px;">Volumen de Protección Crítica (Nivel Confianza 95%)</div>
+        <div style="font-size: 13px; color: var(--ink-light); margin-top: 6px;">Cálculo paramétrico de resguardo basado en dispersión estándar</div>
       </div>
-      <div class="fb-right">
-        <div class="fb-cat">Poleras · OI 2025</div>
-        <div class="fb-date">Análisis completado hoy</div>
+      <div class="kpi-val" id="valS5Stock" style="font-size: 36px; color: var(--mauve-text); font-weight: 500; margin: 0;">0 <span>uds</span></div>
+    </div>
+
+    <div style="text-align: right;">
+      <a href="#s6" class="btn-ink" id="btnHaciaS6">Consolidar orden de producción →</a>
+    </div>
+    <div class="page-indicator">
+      <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div>
+    </div>
+  </section>
+
+  <section id="s6" class="screen-section">
+    <header>
+      <div class="brand">DataModa</div>
+      <div class="meta-tag">Cierre de Ciclo de Planificación</div>
+    </header>
+    <h2>Resumen e integración de modelos</h2>
+
+    <div class="result-box" style="padding: 40px; margin-bottom: 40px; background-color: var(--cream); border: 1px solid var(--dust-deep); flex-direction: row;">
+      <div>
+        <div class="result-label" style="font-size: 14px; color: var(--ink); font-weight: 500;">Plan de producción final consolidado sugerido</div>
+        <div style="font-size: 13px; color: var(--ink-light); margin-top: 6px;" id="txtFormulaS6">
+          Fórmula: Demanda Suavizada (0) + Stock de Seguridad (0)
+        </div>
+      </div>
+      <div class="kpi-val" id="valPlanFinal" style="font-size: 46px; color: var(--sage-text); font-weight: 500; margin: 0;">
+        0 <span>uds</span>
       </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-outline">← Ajustar parámetros</button>
-      <button class="btn btn-ink">Confirmar plan de producción →</button>
+
+    <button id="btnFinalizar" class="btn-ink" style="width: 100%; justify-content: center; border-radius: 4px; padding: 16px;">Confirmar plan de producción →</button>
+
+    <div class="page-indicator">
+      <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div>
     </div>
-  </div>
-  <div class="page-indicator"><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div></div>
+  </section>
+
 </div>
 
-</body>
-</html>
 <script>
-  // Capturamos el botón de la Pantalla 02
-  const btnAnalizar = document.querySelector('#s2 .btn-ink');
-  
-  btnAnalizar.addEventListener('click', async () => {
-      // Cambiamos el texto para dar feedback visual
-      btnAnalizar.innerText = "Procesando...";
-      btnAnalizar.style.opacity = "0.7";
+  // Enrutamiento forzado al cargar la página
+  if (!window.location.hash || window.location.hash === "#") {
+      window.location.hash = "#s1";
+  }
 
-      try {
-          // Simulamos el envío de un formulario con un archivo
-          const formData = new FormData();
-          formData.append("archivoVentas", new Blob(["datos de prueba"], { type: "text/csv" }), "ventas.csv");
+  // Estado global unificado del algoritmo
+  let appState = {
+      prenda: "",
+      categoria: "",
+      ventasHistoricas: [],
+      prediccionBase: 0,
+      stockSeguridad: 0,
+      promedioHistorico: 0,
+      ajusteDinamico: 0,
+      planFinal: 0,
+      sensibilidad: 'mid'
+  };
 
-          // Llamamos a la API que creamos en Node.js
-          const respuesta = await fetch('/api/analizar', {
-              method: 'POST',
-              body: formData
-          });
+  const dropZone = document.getElementById('dropZone');
+  const btnAnalizar = document.getElementById('btnAnalizar');
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.csv';
 
-          const datos = await respuesta.json();
-          console.log("Respuesta del servidor:", datos);
-          
-          // Si es exitoso, navegamos a la Pantalla 03
-          window.location.hash = "#s3";
-          
-      } catch (error) {
-          console.error("Error al analizar:", error);
-          alert("Hubo un error al procesar el archivo.");
-      } finally {
-          btnAnalizar.innerText = "Analizar archivo →";
-          btnAnalizar.style.opacity = "1";
+  if (dropZone) {
+      dropZone.addEventListener('click', () => fileInput.click());
+  }
+
+  fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+          window.archivoPrueba = e.target.files[0];
+          const viejoAviso = document.getElementById('fileAviso');
+          if (viejoAviso) viejoAviso.remove();
+
+          const aviso = document.createElement('div');
+          aviso.id = 'fileAviso';
+          aviso.style.cssText = "margin-top: 12px; font-size: 12px; color: var(--blush-text); font-weight: 500; text-align: center;";
+          aviso.innerText = `✓ Archivo cargado correctamente: ${window.archivoPrueba.name}`;
+          dropZone.parentNode.appendChild(aviso);
       }
   });
+
+  if (btnAnalizar) {
+      btnAnalizar.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          appState.prenda = document.getElementById('selectPrenda').value;
+          appState.categoria = document.getElementById('selectCategoria').value;
+
+          if (!window.archivoPrueba) {
+              alert("Por favor, selecciona un archivo histórico CSV antes de ejecutar la proyección.");
+              return;
+          }
+
+          btnAnalizar.innerText = "PROCESANDO MODELO...";
+
+          try {
+              const formData = new FormData();
+              formData.append("archivoVentas", window.archivoPrueba);
+
+              const respuesta = await fetch('/api/analizar', {
+                  method: 'POST',
+                  body: formData
+              });
+              const data = await respuesta.json();
+
+              if (!respuesta.ok) throw new Error(data.mensaje);
+
+              appState.ventasHistoricas = data.datosHistoricos;
+              appState.prediccionBase = data.prediccionBase;
+              appState.stockSeguridad = data.stockSeguridadBase;
+              appState.promedioHistorico = data.promedioHistorico;
+              appState.ajusteDinamico = data.prediccionBase;
+              appState.planFinal = data.prediccionBase + data.stockSeguridadBase;
+
+              // Rellenar Pantalla 3
+              document.getElementById('txtPrendaHeader').innerText = `Línea analizada: ${appState.prenda}`;
+              document.getElementById('labelColeccion').innerText = appState.categoria;
+              document.getElementById('valPrediccion').innerHTML = `${data.prediccionBase} <span>uds</span>`;
+              document.getElementById('valVolatilidad').innerHTML = `± ${data.desviacionEstandar} <span>uds</span>`;
+              document.getElementById('valStockSeg').innerHTML = `${data.stockSeguridadBase} <span>uds</span>`;
+
+              renderizarBarrasMockup(data);
+
+              // Transición a la siguiente pantalla
+              window.location.hash = "#s3";
+              actualizarUIParametrosS4();
+
+          } catch (error) {
+              alert(error.message || "Error al procesar el modelo estadístico.");
+          } finally {
+              btnAnalizar.innerText = "ANALIZAR ARCHIVO →";
+          }
+      });
+  }
+
+  function renderizarBarrasMockup(res) {
+      const contenedor = document.getElementById('graficoBarras');
+      if (!contenedor) return;
+
+      let maxVal = Math.max(...res.datosHistoricos, res.prediccionBase) || 1;
+      let html = "";
+
+      res.datosHistoricos.forEach((valor, i) => {
+          const altoPct = (valor / maxVal) * 100;
+          html += `
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <span style="font-size: 10px; color: var(--ink-light); font-weight: 500;">${valor}</span>
+                <div style="width: 100%; height: ${altoPct}px; background-color: var(--dust-deep); border-radius: 4px 4px 0 0;"></div>
+                <span style="font-size: 10px; text-transform: uppercase; color: var(--ink-light)">P${i+1}</span>
+            </div>`;
+      });
+
+      const predPct = (res.prediccionBase / maxVal) * 100;
+      html += `
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: var(--blush-deep); font-weight: 600;">${res.prediccionBase}</span>
+            <div style="width: 100%; height: ${predPct}px; background-color: var(--blush-mid); border: 1px dashed var(--blush-deep); border-radius: 4px 4px 0 0;"></div>
+            <span style="font-size: 10px; font-weight: 600; color: var(--blush-deep)">PROY</span>
+        </div>`;
+
+      contenedor.innerHTML = html;
+  }
+
+  // --- INTERACTIVIDAD CORREGIDA DE LOS CUADROS DE LA PANTALLA 4 ---
+  const optLow = document.getElementById('optLow');
+  const optMid = document.getElementById('optMid');
+  const optHigh = document.getElementById('optHigh');
+  const listaOpciones = [optLow, optMid, optHigh];
+
+  listaOpciones.forEach(card => {
+      if (card) {
+          card.addEventListener('click', async () => {
+              // 1. Quita la selección previa para mover el color
+              listaOpciones.forEach(o => o.classList.remove('active'));
+              
+              // 2. Aplica inmediatamente el color correspondiente al cuadro cliqueado
+              card.classList.add('active');
+
+              if (card.id === 'optLow') appState.sensibilidad = 'low';
+              else if (card.id === 'optHigh') appState.sensibilidad = 'high';
+              else appState.sensibilidad = 'mid';
+
+              try {
+                  const respuesta = await fetch('/api/ajuste-dinamico', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          prediccionBase: appState.prediccionBase,
+                          promedioHistorico: appState.promedioHistorico,
+                          nivelSensibilidad: appState.sensibilidad
+                      })
+                  });
+                  const dataAjuste = await respuesta.json();
+
+                  appState.ajusteDinamico = dataAjuste.propuestaAjuste;
+                  appState.planFinal = dataAjuste.propuestaAjuste + appState.stockSeguridad;
+
+                  actualizarUIParametrosS4();
+              } catch (err) {
+                  console.error("Error al recalcular sensibilidad:", err);
+              }
+          });
+      }
+  });
+
+  function actualizarUIParametrosS4() {
+      document.getElementById('valS4Ajustado').innerHTML = `${appState.ajusteDinamico} <span>uds</span>`;
+      const diffPct = (((appState.ajusteDinamico - appState.prediccionBase) / appState.prediccionBase) * 100).toFixed(1);
+      document.getElementById('valS4Porcentaje').innerText = `${diffPct >= 0 ? '+' : ''}${diffPct}% respecto al cálculo lineal`;
+  }
+
+  // Traspasos secuenciales entre pantallas finales
+  document.getElementById('btnHaciaS5').addEventListener('click', () => {
+      document.getElementById('valS5Stock').innerHTML = `${appState.stockSeguridad} <span>uds</span>`;
+  });
+
+  document.getElementById('btnHaciaS6').addEventListener('click', () => {
+      document.getElementById('txtFormulaS6').innerText = `Fórmula aplicada: Demanda Ajustada por Suavizado (${appState.ajusteDinamico} uds) + Colchón de Stock de Seguridad (${appState.stockSeguridad} uds)`;
+      document.getElementById('valPlanFinal').innerHTML = `${appState.planFinal} <span>uds</span>`;
+  });
+
+  document.getElementById('btnFinalizar').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert(`¡Orden confirmada para la Universidad de Valparaíso!\n\nSe ha guardado un lote optimizado de ${appState.planFinal} unidades de "${appState.prenda}" para la colección "${appState.categoria}".`);
+  });
 </script>
+</body>
+</html>
