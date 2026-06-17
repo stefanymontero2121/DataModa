@@ -593,37 +593,270 @@
 </body>
 </html>
 <script>
-  // Capturamos el botón de la Pantalla 02
-  const btnAnalizar = document.querySelector('#s2 .btn-ink');
-  
-  btnAnalizar.addEventListener('click', async () => {
-      // Cambiamos el texto para dar feedback visual
-      btnAnalizar.innerText = "Procesando...";
-      btnAnalizar.style.opacity = "0.7";
+// ═══════════════════════════════════════════════════════════
+// DATAMODA — Script de interactividad completo
+// ═══════════════════════════════════════════════════════════
 
-      try {
-          // Simulamos el envío de un formulario con un archivo
-          const formData = new FormData();
-          formData.append("archivoVentas", new Blob(["datos de prueba"], { type: "text/csv" }), "ventas.csv");
+const state = {
+  archivo:      null,
+  datos:        null,
+  sensibilidad: 'media'
+};
 
-          // Llamamos a la API que creamos en Node.js
-          const respuesta = await fetch('/api/analizar', {
-              method: 'POST',
-              body: formData
-          });
+// ── 1. NAVEGACIÓN POR HASH ───────────────────────────────
 
-          const datos = await respuesta.json();
-          console.log("Respuesta del servidor:", datos);
-          
-          // Si es exitoso, navegamos a la Pantalla 03
-          window.location.hash = "#s3";
-          
-      } catch (error) {
-          console.error("Error al analizar:", error);
-          alert("Hubo un error al procesar el archivo.");
-      } finally {
-          btnAnalizar.innerText = "Analizar archivo →";
-          btnAnalizar.style.opacity = "1";
-      }
+function navegarA(hash) {
+  const id = hash.replace(/^#?/, '');
+  const destino = document.getElementById(id);
+  if (!destino) return;
+  destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.history.pushState(null, '', '#' + id);
+  actualizarNavActiva(id);
+}
+
+function actualizarNavActiva(id) {
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + id);
   });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash) setTimeout(() => navegarA(window.location.hash), 100);
+  actualizarNavActiva(window.location.hash.replace('#', '') || 's1');
+});
+
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); navegarA(a.getAttribute('href')); });
+});
+
+// ── 2. PANTALLA 01 → 02 ─────────────────────────────────
+
+document.querySelector('#s1 .btn-ink').addEventListener('click', () => navegarA('s2'));
+
+// ── 3. ZONA DE CARGA ─────────────────────────────────────
+
+const inputFile  = document.createElement('input');
+inputFile.type   = 'file';
+inputFile.accept = '.csv,.txt';
+inputFile.style.display = 'none';
+document.body.appendChild(inputFile);
+
+const uploadZone  = document.querySelector('#s2 .upload-zone');
+const fileChip    = document.querySelector('#s2 .file-chip');
+const errorAlert  = document.querySelector('#s2 .error-alert');
+const btnAnalizar = document.querySelector('#s2 .btn-ink');
+
+fileChip.style.display   = 'none';
+errorAlert.style.display = 'none';
+
+uploadZone.style.cursor = 'pointer';
+uploadZone.addEventListener('click', () => inputFile.click());
+
+uploadZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  uploadZone.style.borderColor = 'var(--blush-deep)';
+});
+uploadZone.addEventListener('dragleave', () => {
+  uploadZone.style.borderColor = 'var(--blush-mid)';
+});
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.style.borderColor = 'var(--blush-mid)';
+  const f = e.dataTransfer.files[0];
+  if (f) procesarArchivoSeleccionado(f);
+});
+
+inputFile.addEventListener('change', () => {
+  if (inputFile.files[0]) procesarArchivoSeleccionado(inputFile.files[0]);
+});
+
+function procesarArchivoSeleccionado(archivo) {
+  if (!archivo.name.match(/\.(csv|txt)$/i)) {
+    mostrarError('Solo se aceptan archivos <em>.csv</em>.');
+    return;
+  }
+  state.archivo = archivo;
+  errorAlert.style.display = 'none';
+  fileChip.style.display = 'flex';
+  fileChip.querySelector('.file-chip-name').textContent = archivo.name;
+  fileChip.querySelector('.file-chip-size').textContent =
+    (archivo.size / 1024).toFixed(1) + ' KB · Listo para analizar';
+}
+
+function mostrarError(html) {
+  errorAlert.style.display = 'flex';
+  errorAlert.querySelector('.error-text').innerHTML = '<strong>Error:</strong> ' + html;
+}
+
+// ── 4. ANALIZAR ARCHIVO → PANTALLA 03 ───────────────────
+
+btnAnalizar.addEventListener('click', async () => {
+  if (!state.archivo) { mostrarError('Selecciona un archivo CSV antes de continuar.'); return; }
+
+  btnAnalizar.textContent  = 'Analizando…';
+  btnAnalizar.disabled     = true;
+  btnAnalizar.style.opacity = '0.7';
+  errorAlert.style.display = 'none';
+
+  try {
+    const formData = new FormData();
+    formData.append('archivoVentas', state.archivo);
+
+    const resp  = await fetch('/api/analizar', { method: 'POST', body: formData });
+    const datos = await resp.json();
+    if (!resp.ok || datos.error) throw new Error(datos.error || 'Error del servidor');
+
+    state.datos = datos;
+    inyectarPantalla3(datos);
+    inyectarPantalla4(datos);
+    inyectarPantalla5(datos);
+    navegarA('s3');
+
+  } catch (err) {
+    mostrarError(err.message);
+  } finally {
+    btnAnalizar.textContent  = 'Analizar archivo →';
+    btnAnalizar.disabled     = false;
+    btnAnalizar.style.opacity = '1';
+  }
+});
+
+// ── 5. PANTALLA 03 ───────────────────────────────────────
+
+function fmtNum(n) { return n.toLocaleString('es-CL'); }
+
+function inyectarPantalla3(d) {
+  document.querySelector('#s3 .kpi-card.rose .kpi-val').innerHTML =
+    fmtNum(d.prediccionBase) + ' <span class="kpi-unit" style="font-size:18px;">uds</span>';
+
+  document.querySelector('#s3 .kpi-card.sage .kpi-val').innerHTML =
+    '+' + fmtNum(d.stockSeguridad) + ' <span class="kpi-unit" style="font-size:18px;">uds</span>';
+  document.querySelector('#s3 .kpi-card.sage .kpi-note').textContent = 'σ = ' + d.sigma + ' uds';
+
+  const r2pct = Math.round(d.r2 * 100);
+  document.querySelector('#s3 .kpi-card.white .kpi-val').innerHTML =
+    r2pct + ' <span class="kpi-unit">%</span>';
+  document.querySelector('#s3 .kpi-card.white .kpi-note').textContent = 'R² = ' + d.r2.toFixed(2);
+
+  document.querySelector('#s3 .rec-strip').innerHTML =
+    '<strong>Recomendación:</strong> producir entre ' + fmtNum(d.rangoMin) + ' y ' +
+    fmtNum(d.rangoMax) + ' unidades. Pendiente de <strong>' + d.pendiente +
+    ' uds/período</strong> detectada en ' + d.periodos + ' períodos.';
+
+  actualizarGrafico(d.serie, d.pendiente, d.intercepto);
+}
+
+function actualizarGrafico(serie, m, b) {
+  const svg = document.querySelector('#s3 .chart-wrap svg');
+  if (!serie || serie.length < 2) return;
+
+  const W = 1100, H = 155, PAD_TOP = 20;
+  const maxVal = Math.max(...serie) * 1.15;
+  const yPos = v => H - ((v / maxVal) * (H - PAD_TOP));
+
+  const n = serie.length;
+  const xStep = 720 / (n - 1);
+  const ptsReal = serie.map((v, i) => [Math.round(i * xStep), Math.round(yPos(v))]);
+
+  const xExtStep = (W - 720) / 3;
+  const ptsProj = [1, 2, 3].map(k => [
+    Math.round(720 + k * xExtStep),
+    Math.round(yPos(m * (n - 1 + k) + b))
+  ]);
+
+  const toStr = pts => pts.map(p => p.join(',')).join(' ');
+
+  const polylines = svg.querySelectorAll('polyline');
+  if (polylines[0]) polylines[0].setAttribute('points', toStr(ptsReal));
+  if (polylines[1]) polylines[1].setAttribute('points',
+    ptsReal[ptsReal.length - 1].join(',') + ' ' + toStr(ptsProj));
+
+  svg.querySelectorAll('circle[fill="#B07060"]').forEach((c, i) => {
+    if (ptsReal[i]) { c.setAttribute('cx', ptsReal[i][0]); c.setAttribute('cy', ptsReal[i][1]); }
+  });
+}
+
+document.querySelector('#s3 .btn-ink').addEventListener('click', () => navegarA('s4'));
+
+// ── 6. PANTALLA 04 — SENSIBILIDAD ───────────────────────
+
+const sensOpts = document.querySelectorAll('#s4 .sens-opt');
+
+sensOpts.forEach((opt, idx) => {
+  const nivel = ['baja', 'media', 'alta'][idx];
+  opt.addEventListener('click', () => {
+    state.sensibilidad = nivel;
+    sensOpts.forEach(o => { o.classList.remove('active'); const d = o.querySelector('.sens-radio-dot'); if (d) d.remove(); });
+    opt.classList.add('active');
+    const dot = document.createElement('div');
+    dot.className = 'sens-radio-dot';
+    opt.querySelector('.sens-radio').appendChild(dot);
+    if (state.datos) actualizarResultadoAjuste(state.datos);
+  });
+});
+
+function inyectarPantalla4(d) {
+  const badges = document.querySelectorAll('#s4 .sens-badge');
+  badges[0].textContent = fmtNum(d.ajusteBajo)  + ' uds';
+  badges[1].textContent = fmtNum(d.ajusteMedio) + ' uds';
+  badges[2].textContent = fmtNum(d.ajusteAlto)  + ' uds';
+  actualizarResultadoAjuste(d);
+}
+
+function actualizarResultadoAjuste(d) {
+  const valor = { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
+  const delta = (((valor - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
+  document.querySelector('#s4 .result-val').innerHTML =
+    fmtNum(valor) + ' <span class="result-unit">unidades</span>';
+  document.querySelector('#s4 .result-delta').textContent =
+    (delta >= 0 ? '+' : '') + delta.replace('.', ',') + '% vs base';
+}
+
+document.querySelector('#s4 .btn-sage').addEventListener('click', () => {
+  if (state.datos) inyectarPantalla5(state.datos);
+  navegarA('s5');
+});
+document.querySelector('#s4 .btn-outline').addEventListener('click', () => navegarA('s3'));
+
+// ── 7. PANTALLA 05 ───────────────────────────────────────
+
+function inyectarPantalla5(d) {
+  const ajuste    = { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
+  const total     = ajuste + d.stockSeguridad;
+  const pctAjuste = (((ajuste - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
+  const pctTotal  = (((total  - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
+  const signo     = v => (v >= 0 ? '+' : '') + String(v).replace('.', ',') + '%';
+  const nivel     = { baja: 'baja', media: 'media', alta: 'alta' }[state.sensibilidad];
+
+  const filas = document.querySelectorAll('#s5 .comp-table tbody tr');
+  filas[0].querySelectorAll('td')[1].textContent = fmtNum(d.prediccionBase);
+  filas[0].querySelectorAll('td')[2].querySelector('.comp-delta').textContent = 'base';
+  filas[1].querySelectorAll('td')[0].textContent = 'Ajuste dinámico (sensibilidad ' + nivel + ')';
+  filas[1].querySelectorAll('td')[1].textContent = fmtNum(ajuste);
+  filas[1].querySelectorAll('td')[2].querySelector('.comp-delta').textContent = signo(pctAjuste);
+  filas[2].querySelectorAll('td')[1].textContent = '+' + fmtNum(d.stockSeguridad);
+  filas[3].querySelectorAll('td')[1].textContent = fmtNum(total);
+  filas[3].querySelectorAll('td')[2].querySelector('.comp-delta').textContent = signo(pctTotal);
+
+  document.querySelector('#s5 .fb-num').innerHTML =
+    fmtNum(total) + ' <span class="fb-unit">unidades</span>';
+  document.querySelector('#s5 .fb-date').textContent =
+    'Análisis completado ' + new Date().toLocaleDateString('es-CL', { day:'numeric', month:'long', year:'numeric' });
+}
+
+document.querySelector('#s5 .btn-outline').addEventListener('click', () => navegarA('s4'));
+
+document.querySelector('#s5 .btn-ink').addEventListener('click', () => {
+  if (!state.datos) return;
+  const ajuste = { baja: state.datos.ajusteBajo, media: state.datos.ajusteMedio, alta: state.datos.ajusteAlto }[state.sensibilidad];
+  const total  = ajuste + state.datos.stockSeguridad;
+  const banner = document.querySelector('#s5 .final-banner');
+  banner.style.background = 'var(--sage-deep)';
+  banner.querySelector('.fb-eyebrow').textContent = '✓ Plan confirmado y guardado';
+  banner.querySelector('.fb-num').innerHTML = fmtNum(total) + ' <span class="fb-unit">unidades</span>';
+  const btn = document.querySelector('#s5 .btn-ink');
+  btn.textContent = '✓ Plan confirmado';
+  btn.disabled    = true;
+  btn.style.opacity = '0.7';
+});
 </script>
