@@ -127,6 +127,18 @@ function leerExcel(filePath) {
   return xlsx.utils.sheet_to_json(ws, { defval: '' });
 }
 
+function listarCategorias(filas, colCategoria) {
+  if (!colCategoria) return [];
+  const vistas = new Map(); // norm -> etiqueta original
+  for (const f of filas) {
+    const original = String(f[colCategoria] ?? '').trim();
+    if (!original) continue;
+    const clave = norm(original);
+    if (!vistas.has(clave)) vistas.set(clave, original);
+  }
+  return Array.from(vistas.values()).sort((a, b) => a.localeCompare(b, 'es'));
+}
+
 function limpiarYAgrupar(filas, colTiempo, colDemanda, colCategoria, categoriaFiltro) {
   let validas = filas.filter(f => {
     const t = fechaAOrden(f[colTiempo]);
@@ -187,6 +199,8 @@ async function preprocesar(filePath, extension, categoriaFiltro = null) {
     );
   }
 
+  const categoriasDisponibles = listarCategorias(filas, colCategoria);
+
   const resultado = limpiarYAgrupar(filas, colTiempo, colDemanda, colCategoria, categoriaFiltro);
 
   if (!resultado || resultado.serie.length < 2) {
@@ -197,10 +211,12 @@ async function preprocesar(filePath, extension, categoriaFiltro = null) {
   }
 
   return {
-    serie:     resultado.serie,
-    etiquetas: resultado.etiquetas,
-    columnas:  { colTiempo, colDemanda, colCategoria: colCategoria || null },
+    serie:                resultado.serie,
+    etiquetas:            resultado.etiquetas,
+    columnas:             { colTiempo, colDemanda, colCategoria: colCategoria || null },
+    categoriasDisponibles,
+    categoriaActiva:      categoriaFiltro || null,
   };
 }
 
-module.exports = { preprocesar, detectarColumnas, norm };
+module.exports = { preprocesar, detectarColumnas, listarCategorias, norm, fechaAOrden, parsearNumero };
