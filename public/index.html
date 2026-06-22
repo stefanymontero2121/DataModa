@@ -637,7 +637,7 @@ document.querySelector('#s1 .btn-ink').addEventListener('click', () => navegarA(
 
 const inputFile  = document.createElement('input');
 inputFile.type   = 'file';
-inputFile.accept = '.csv,.txt';
+inputFile.accept = '.csv,.txt,.xlsx,.xls';
 inputFile.style.display = 'none';
 document.body.appendChild(inputFile);
 
@@ -671,8 +671,8 @@ inputFile.addEventListener('change', () => {
 });
 
 function procesarArchivoSeleccionado(archivo) {
-  if (!archivo.name.match(/\.(csv|txt)$/i)) {
-    mostrarError('Solo se aceptan archivos <em>.csv</em>.');
+  if (!archivo.name.match(/\.(csv|txt|xlsx|xls)$/i)) {
+    mostrarError('Solo se aceptan archivos <em>.csv</em>, <em>.xlsx</em> o <em>.xls</em>.');
     return;
   }
   state.archivo = archivo;
@@ -686,6 +686,25 @@ function procesarArchivoSeleccionado(archivo) {
 function mostrarError(html) {
   errorAlert.style.display = 'flex';
   errorAlert.querySelector('.error-text').innerHTML = '<strong>Error:</strong> ' + html;
+}
+
+function mostrarColumnasDetectadas(columnas, periodos) {
+  let info = document.getElementById('cols-info');
+  if (!info) {
+    info = document.createElement('div');
+    info.id = 'cols-info';
+    info.style.cssText = 'margin-top:10px;padding:10px 14px;background:var(--sage);border-radius:10px;font-size:13px;color:var(--sage-text);line-height:1.6;';
+    fileChip.parentNode.insertBefore(info, fileChip.nextSibling);
+  }
+  const partes = [
+    '<strong>Columnas detectadas:</strong>',
+    '· Período: <em>' + columnas.colTiempo + '</em>',
+    '· Demanda: <em>' + columnas.colDemanda + '</em>',
+    columnas.colCategoria ? '· Categoría: <em>' + columnas.colCategoria + '</em>' : '',
+    '· Períodos analizados: <strong>' + periodos + '</strong>',
+  ].filter(Boolean);
+  info.innerHTML = partes.join('<br>');
+  info.style.display = 'block';
 }
 
 // ── 4. ANALIZAR ARCHIVO → PANTALLA 03 ───────────────────
@@ -707,6 +726,7 @@ btnAnalizar.addEventListener('click', async () => {
     if (!resp.ok || datos.error) throw new Error(datos.error || 'Error del servidor');
 
     state.datos = datos;
+    mostrarColumnasDetectadas(datos.columnas, datos.periodos);
     inyectarPantalla3(datos);
     inyectarPantalla4(datos);
     inyectarPantalla5(datos);
@@ -743,10 +763,10 @@ function inyectarPantalla3(d) {
     fmtNum(d.rangoMax) + ' unidades. Pendiente de <strong>' + d.pendiente +
     ' uds/período</strong> detectada en ' + d.periodos + ' períodos.';
 
-  actualizarGrafico(d.serie, d.pendiente, d.intercepto);
+  actualizarGrafico(d.serie, d.pendiente, d.intercepto, d.etiquetas);
 }
 
-function actualizarGrafico(serie, m, b) {
+function actualizarGrafico(serie, m, b, etiquetas) {
   const svg = document.querySelector('#s3 .chart-wrap svg');
   if (!serie || serie.length < 2) return;
 
@@ -771,9 +791,80 @@ function actualizarGrafico(serie, m, b) {
   if (polylines[1]) polylines[1].setAttribute('points',
     ptsReal[ptsReal.length - 1].join(',') + ' ' + toStr(ptsProj));
 
-  svg.querySelectorAll('circle[fill="#B07060"]').forEach((c, i) => {
-    if (ptsReal[i]) { c.setAttribute('cx', ptsReal[i][0]); c.setAttribute('cy', ptsReal[i][1]); }
+  // Update fill polygons
+  const polygons = svg.querySelectorAll('polygon');
+  const floorY = H + 5;
+  if (polygons[0]) {
+    const fillPts = ptsReal.map(p => p.join(',')).join(' ') + ' ' +
+      ptsReal[ptsReal.length - 1][0] + ',' + floorY + ' 0,' + floorY;
+    polygons[0].setAttribute('points', fillPts);
+  }
+  if (polygons[1]) {
+    const last = ptsReal[ptsReal.length - 1];
+    const fillPts = last.join(',') + ' ' + ptsProj.map(p => p.join(',')).join(' ') + ' ' +
+      ptsProj[ptsProj.length - 1][0] + ',' + floorY + ' ' + last[0] + ',' + floorY;
+    polygons[1].setAttribute('points', fillPts);
+  }
+
+  // Update real dots
+  const realCircles = svg.querySelectorAll('circle[fill="#B07060"]');
+  // Remove excess dots if fewer data points
+  realCircles.forEach((c, i) => {
+    if (i < ptsReal.length) {
+      c.setAttribute('cx', ptsReal[i][0]);
+      c.setAttribute('cy', ptsReal[i][1]);
+      // Make last dot larger with white stroke
+      if (i === ptsReal.length - 1) { c.setAttribute('r', '6'); c.setAttribute('stroke', 'white'); c.setAttribute('stroke-width', '2.5'); }
+      else { c.setAttribute('r', '5'); c.removeAttribute('stroke'); }
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+    }
   });
+  // Add missing dots if more data points than existing circles
+  if (ptsReal.length > realCircles.length) {
+    for (let i = realCircles.length; i < ptsReal.length; i++) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', ptsReal[i][0]); c.setAttribute('cy', ptsReal[i][1]);
+      c.setAttribute('r', i === ptsReal.length - 1 ? '6' : '5');
+      c.setAttribute('fill', '#B07060');
+      if (i === ptsReal.length - 1) { c.setAttribute('stroke', 'white'); c.setAttribute('stroke-width', '2.5'); }
+      svg.appendChild(c);
+    }
+  }
+
+  // Replace x-axis labels
+  svg.querySelectorAll('text[data-xlabel]').forEach(t => t.remove());
+  const NS = 'http://www.w3.org/2000/svg';
+  if (etiquetas && etiquetas.length) {
+    // Real labels — show up to 8 evenly spaced to avoid crowding
+    const maxLabels = Math.min(etiquetas.length, 8);
+    const step = Math.max(1, Math.floor(etiquetas.length / maxLabels));
+    for (let i = 0; i < etiquetas.length; i += step) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', Math.round(i * xStep) - 4);
+      t.setAttribute('y', '172');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('fill', '#8A7A68');
+      t.setAttribute('font-family', 'Jost,sans-serif');
+      t.setAttribute('data-xlabel', '1');
+      t.textContent = String(etiquetas[i]).substring(0, 8);
+      svg.appendChild(t);
+    }
+    // Projection labels
+    const projLabels = ['P+1 ↗', 'P+2 ↗', 'P+3'];
+    ptsProj.forEach((p, k) => {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', p[0] - 10);
+      t.setAttribute('y', '172');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('fill', '#6A9964');
+      t.setAttribute('font-family', 'Jost,sans-serif');
+      t.setAttribute('data-xlabel', '1');
+      t.textContent = projLabels[k];
+      svg.appendChild(t);
+    });
+  }
 }
 
 document.querySelector('#s3 .btn-ink').addEventListener('click', () => navegarA('s4'));
