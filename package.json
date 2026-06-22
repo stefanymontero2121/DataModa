@@ -1,18 +1,20 @@
 {
   "name": "datamoda",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "node --test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["moda", "prediccion", "demanda", "regresion", "stock"],
+  "author": "Stefany Montero, Renata Orozco, María José Baxmann, Yoselin Cornejo",
   "license": "ISC",
-  "description": "",
+  "description": "Plataforma de predicción de demanda textil — ICI-513 GPI, Universidad de Valparaíso",
   "dependencies": {
     "cors": "^2.8.6",
     "csv-parser": "^3.2.1",
     "express": "^5.2.1",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "xlsx": "^0.18.5"
   }
 }

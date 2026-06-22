@@ -269,6 +269,14 @@
   /* Hero bars decoration */
   .hero-bars { display: flex; align-items: flex-end; gap: 8px; }
   .hbar { border-radius: 4px 4px 0 0; }
+
+  /* Impresión / exportación a PDF: solo el plan final (pantalla 05) */
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; width: 100%; }
+    .page:not(#s5) { display: none !important; }
+    #s5 .inner-nav, #s5 .page-indicator, #s5 .btn-row { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -423,6 +431,23 @@
         <div class="legend-item"><div class="legend-dot" style="background:var(--sage-deep);"></div>Proyección</div>
       </div>
     </div>
+    <!-- Controles CU005 (filtro de categoría) + CU003 FA1 (tiempo de reposición t) -->
+    <div class="ctrl-bar" id="ctrlBar" style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-end; margin-bottom:20px;">
+      <div class="field" style="min-width:220px;">
+        <label class="field-label">Explorar por categoría · CU005</label>
+        <div class="field-select-wrap"><select class="field-select" id="selCategoria"><option value="">Todas las categorías</option></select></div>
+      </div>
+      <div class="field" style="min-width:200px;">
+        <label class="field-label">Tiempo de reposición (t) · períodos</label>
+        <div class="field-select-wrap"><select class="field-select" id="selTiempo">
+          <option value="1">1 período</option>
+          <option value="2">2 períodos</option>
+          <option value="4">4 períodos</option>
+          <option value="8">8 períodos</option>
+        </select></div>
+      </div>
+    </div>
+    <div id="variabilidadAlert" style="display:none; font-size:13px; padding:12px 18px; border-radius:12px; margin-bottom:18px;"></div>
     <div class="chart-wrap">
       <svg width="100%" viewBox="0 0 1100 180" style="display:block; overflow:visible;">
         <line x1="0" y1="20"  x2="1100" y2="20"  stroke="#E8E0D5" stroke-width="0.8"/>
@@ -532,7 +557,10 @@
         <div class="result-label">Nueva propuesta</div>
         <div class="result-val">1.350 <span class="result-unit">unidades</span></div>
       </div>
-      <div class="result-delta">+12,5% vs base</div>
+      <div style="text-align:right;">
+        <div class="result-delta">+12,5% vs base</div>
+        <button class="btn btn-outline" id="btnEditarAjuste" style="margin-top:10px; padding:8px 16px; font-size:11px;">✎ Editar valor</button>
+      </div>
     </div>
     <div class="btn-row">
       <button class="btn btn-outline">← Volver</button>
@@ -584,6 +612,7 @@
     </div>
     <div class="btn-row">
       <button class="btn btn-outline">← Ajustar parámetros</button>
+      <button class="btn btn-sage" id="btnExportarPDF" style="flex:0 0 auto;">⬇ Exportar PDF</button>
       <button class="btn btn-ink">Confirmar plan de producción →</button>
     </div>
   </div>
@@ -637,7 +666,7 @@ document.querySelector('#s1 .btn-ink').addEventListener('click', () => navegarA(
 
 const inputFile  = document.createElement('input');
 inputFile.type   = 'file';
-inputFile.accept = '.csv,.txt';
+inputFile.accept = '.csv,.txt,.xlsx,.xls';
 inputFile.style.display = 'none';
 document.body.appendChild(inputFile);
 
@@ -671,11 +700,14 @@ inputFile.addEventListener('change', () => {
 });
 
 function procesarArchivoSeleccionado(archivo) {
-  if (!archivo.name.match(/\.(csv|txt)$/i)) {
-    mostrarError('Solo se aceptan archivos <em>.csv</em>.');
+  if (!archivo.name.match(/\.(csv|txt|xlsx|xls)$/i)) {
+    mostrarError('Solo se aceptan archivos <em>.csv</em>, <em>.xlsx</em> o <em>.xls</em>.');
     return;
   }
-  state.archivo = archivo;
+  state.archivo      = archivo;
+  state.categoria    = '';
+  state.t            = 1;
+  state.ajusteManual = null;
   errorAlert.style.display = 'none';
   fileChip.style.display = 'flex';
   fileChip.querySelector('.file-chip-name').textContent = archivo.name;
@@ -688,37 +720,102 @@ function mostrarError(html) {
   errorAlert.querySelector('.error-text').innerHTML = '<strong>Error:</strong> ' + html;
 }
 
+function mostrarColumnasDetectadas(columnas, periodos) {
+  let info = document.getElementById('cols-info');
+  if (!info) {
+    info = document.createElement('div');
+    info.id = 'cols-info';
+    info.style.cssText = 'margin-top:10px;padding:10px 14px;background:var(--sage);border-radius:10px;font-size:13px;color:var(--sage-text);line-height:1.6;';
+    fileChip.parentNode.insertBefore(info, fileChip.nextSibling);
+  }
+  const partes = [
+    '<strong>Columnas detectadas:</strong>',
+    '· Período: <em>' + columnas.colTiempo + '</em>',
+    '· Demanda: <em>' + columnas.colDemanda + '</em>',
+    columnas.colCategoria ? '· Categoría: <em>' + columnas.colCategoria + '</em>' : '',
+    '· Períodos analizados: <strong>' + periodos + '</strong>',
+  ].filter(Boolean);
+  info.innerHTML = partes.join('<br>');
+  info.style.display = 'block';
+}
+
 // ── 4. ANALIZAR ARCHIVO → PANTALLA 03 ───────────────────
 
-btnAnalizar.addEventListener('click', async () => {
+// Estado de los filtros activos (CU005 categoría · CU003 FA1 tiempo de reposición)
+state.categoria = '';
+state.t         = 1;
+
+// Función reutilizable: envía el archivo al backend con los filtros actuales.
+// reanalisis=true significa que es un re-filtrado desde la pantalla 03 (no navega ni re-popula el selector).
+async function ejecutarAnalisis({ reanalisis = false } = {}) {
   if (!state.archivo) { mostrarError('Selecciona un archivo CSV antes de continuar.'); return; }
 
-  btnAnalizar.textContent  = 'Analizando…';
-  btnAnalizar.disabled     = true;
-  btnAnalizar.style.opacity = '0.7';
+  if (!reanalisis) {
+    btnAnalizar.textContent   = 'Analizando…';
+    btnAnalizar.disabled      = true;
+    btnAnalizar.style.opacity = '0.7';
+  }
   errorAlert.style.display = 'none';
 
   try {
     const formData = new FormData();
     formData.append('archivoVentas', state.archivo);
+    if (state.categoria) formData.append('categoria', state.categoria);
+    formData.append('t', String(state.t));
 
     const resp  = await fetch('/api/analizar', { method: 'POST', body: formData });
     const datos = await resp.json();
     if (!resp.ok || datos.error) throw new Error(datos.error || 'Error del servidor');
 
     state.datos = datos;
+    state.sensibilidad = state.sensibilidad || 'media';
     inyectarPantalla3(datos);
     inyectarPantalla4(datos);
     inyectarPantalla5(datos);
-    navegarA('s3');
+
+    if (!reanalisis) {
+      mostrarColumnasDetectadas(datos.columnas, datos.periodos);
+      poblarSelectorCategorias(datos.categoriasDisponibles);
+      navegarA('s3');
+    }
 
   } catch (err) {
     mostrarError(err.message);
   } finally {
-    btnAnalizar.textContent  = 'Analizar archivo →';
-    btnAnalizar.disabled     = false;
-    btnAnalizar.style.opacity = '1';
+    if (!reanalisis) {
+      btnAnalizar.textContent   = 'Analizar archivo →';
+      btnAnalizar.disabled      = false;
+      btnAnalizar.style.opacity = '1';
+    }
   }
+}
+
+btnAnalizar.addEventListener('click', () => ejecutarAnalisis());
+
+// CU005 — selector de categoría
+const selCategoria = document.getElementById('selCategoria');
+const selTiempo    = document.getElementById('selTiempo');
+
+function poblarSelectorCategorias(categorias) {
+  selCategoria.innerHTML = '<option value="">Todas las categorías</option>';
+  (categorias || []).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat; opt.textContent = cat;
+    selCategoria.appendChild(opt);
+  });
+  selCategoria.value = state.categoria || '';
+  // Si no se detectó columna de categoría, ocultar el selector
+  selCategoria.closest('.field').style.display =
+    (categorias && categorias.length) ? '' : 'none';
+}
+
+selCategoria.addEventListener('change', () => {
+  state.categoria = selCategoria.value;
+  ejecutarAnalisis({ reanalisis: true });
+});
+selTiempo.addEventListener('change', () => {
+  state.t = parseInt(selTiempo.value, 10) || 1;
+  ejecutarAnalisis({ reanalisis: true });
 });
 
 // ── 5. PANTALLA 03 ───────────────────────────────────────
@@ -743,10 +840,35 @@ function inyectarPantalla3(d) {
     fmtNum(d.rangoMax) + ' unidades. Pendiente de <strong>' + d.pendiente +
     ' uds/período</strong> detectada en ' + d.periodos + ' períodos.';
 
-  actualizarGrafico(d.serie, d.pendiente, d.intercepto);
+  // Título del gráfico según la categoría activa (CU005)
+  document.querySelector('#s3 .chart-title').textContent =
+    (d.categoriaActiva ? d.categoriaActiva : 'Todas las categorías') + ' · Demanda';
+  document.querySelector('#s3 .chart-sub').textContent =
+    'Demanda estimada por regresión lineal · t = ' + d.t + ' período(s)';
+
+  // CU001 FA3 / CU003 FA2 — alerta de variabilidad
+  const va = document.getElementById('variabilidadAlert');
+  if (d.variabilidad === 'alta') {
+    va.style.display    = 'block';
+    va.style.background = 'var(--blush)';
+    va.style.color      = 'var(--blush-text)';
+    va.innerHTML = '⚠️ <strong>Alta variabilidad detectada</strong> (CV = ' +
+      Math.round(d.coefVariacion * 100) + '%). Se añadió un <strong>margen de emergencia de +' +
+      fmtNum(d.margenEmergencia) + ' uds</strong> a la predicción.';
+  } else if (d.variabilidad === 'baja') {
+    va.style.display    = 'block';
+    va.style.background = 'var(--sage)';
+    va.style.color      = 'var(--sage-text)';
+    va.innerHTML = '✓ <strong>Demanda estable</strong> (CV = ' +
+      Math.round(d.coefVariacion * 100) + '%). Puedes reducir el stock de seguridad para ahorrar costos.';
+  } else {
+    va.style.display = 'none';
+  }
+
+  actualizarGrafico(d.serie, d.pendiente, d.intercepto, d.etiquetas);
 }
 
-function actualizarGrafico(serie, m, b) {
+function actualizarGrafico(serie, m, b, etiquetas) {
   const svg = document.querySelector('#s3 .chart-wrap svg');
   if (!serie || serie.length < 2) return;
 
@@ -771,9 +893,80 @@ function actualizarGrafico(serie, m, b) {
   if (polylines[1]) polylines[1].setAttribute('points',
     ptsReal[ptsReal.length - 1].join(',') + ' ' + toStr(ptsProj));
 
-  svg.querySelectorAll('circle[fill="#B07060"]').forEach((c, i) => {
-    if (ptsReal[i]) { c.setAttribute('cx', ptsReal[i][0]); c.setAttribute('cy', ptsReal[i][1]); }
+  // Update fill polygons
+  const polygons = svg.querySelectorAll('polygon');
+  const floorY = H + 5;
+  if (polygons[0]) {
+    const fillPts = ptsReal.map(p => p.join(',')).join(' ') + ' ' +
+      ptsReal[ptsReal.length - 1][0] + ',' + floorY + ' 0,' + floorY;
+    polygons[0].setAttribute('points', fillPts);
+  }
+  if (polygons[1]) {
+    const last = ptsReal[ptsReal.length - 1];
+    const fillPts = last.join(',') + ' ' + ptsProj.map(p => p.join(',')).join(' ') + ' ' +
+      ptsProj[ptsProj.length - 1][0] + ',' + floorY + ' ' + last[0] + ',' + floorY;
+    polygons[1].setAttribute('points', fillPts);
+  }
+
+  // Update real dots
+  const realCircles = svg.querySelectorAll('circle[fill="#B07060"]');
+  // Remove excess dots if fewer data points
+  realCircles.forEach((c, i) => {
+    if (i < ptsReal.length) {
+      c.setAttribute('cx', ptsReal[i][0]);
+      c.setAttribute('cy', ptsReal[i][1]);
+      // Make last dot larger with white stroke
+      if (i === ptsReal.length - 1) { c.setAttribute('r', '6'); c.setAttribute('stroke', 'white'); c.setAttribute('stroke-width', '2.5'); }
+      else { c.setAttribute('r', '5'); c.removeAttribute('stroke'); }
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+    }
   });
+  // Add missing dots if more data points than existing circles
+  if (ptsReal.length > realCircles.length) {
+    for (let i = realCircles.length; i < ptsReal.length; i++) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', ptsReal[i][0]); c.setAttribute('cy', ptsReal[i][1]);
+      c.setAttribute('r', i === ptsReal.length - 1 ? '6' : '5');
+      c.setAttribute('fill', '#B07060');
+      if (i === ptsReal.length - 1) { c.setAttribute('stroke', 'white'); c.setAttribute('stroke-width', '2.5'); }
+      svg.appendChild(c);
+    }
+  }
+
+  // Replace x-axis labels
+  svg.querySelectorAll('text[data-xlabel]').forEach(t => t.remove());
+  const NS = 'http://www.w3.org/2000/svg';
+  if (etiquetas && etiquetas.length) {
+    // Real labels — show up to 8 evenly spaced to avoid crowding
+    const maxLabels = Math.min(etiquetas.length, 8);
+    const step = Math.max(1, Math.floor(etiquetas.length / maxLabels));
+    for (let i = 0; i < etiquetas.length; i += step) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', Math.round(i * xStep) - 4);
+      t.setAttribute('y', '172');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('fill', '#8A7A68');
+      t.setAttribute('font-family', 'Jost,sans-serif');
+      t.setAttribute('data-xlabel', '1');
+      t.textContent = String(etiquetas[i]).substring(0, 8);
+      svg.appendChild(t);
+    }
+    // Projection labels
+    const projLabels = ['P+1 ↗', 'P+2 ↗', 'P+3'];
+    ptsProj.forEach((p, k) => {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', p[0] - 10);
+      t.setAttribute('y', '172');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('fill', '#6A9964');
+      t.setAttribute('font-family', 'Jost,sans-serif');
+      t.setAttribute('data-xlabel', '1');
+      t.textContent = projLabels[k];
+      svg.appendChild(t);
+    });
+  }
 }
 
 document.querySelector('#s3 .btn-ink').addEventListener('click', () => navegarA('s4'));
@@ -782,10 +975,20 @@ document.querySelector('#s3 .btn-ink').addEventListener('click', () => navegarA(
 
 const sensOpts = document.querySelectorAll('#s4 .sens-opt');
 
+// state.ajusteManual: si el usuario edita el valor a mano (CU002 FA1), sobreescribe el del modelo.
+state.ajusteManual = null;
+
+// Valor de ajuste vigente: manual si existe, si no el derivado de la sensibilidad.
+function valorAjuste(d) {
+  if (state.ajusteManual != null) return state.ajusteManual;
+  return { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
+}
+
 sensOpts.forEach((opt, idx) => {
   const nivel = ['baja', 'media', 'alta'][idx];
   opt.addEventListener('click', () => {
     state.sensibilidad = nivel;
+    state.ajusteManual = null; // al cambiar la sensibilidad se descarta la edición manual
     sensOpts.forEach(o => { o.classList.remove('active'); const d = o.querySelector('.sens-radio-dot'); if (d) d.remove(); });
     opt.classList.add('active');
     const dot = document.createElement('div');
@@ -793,6 +996,18 @@ sensOpts.forEach((opt, idx) => {
     opt.querySelector('.sens-radio').appendChild(dot);
     if (state.datos) actualizarResultadoAjuste(state.datos);
   });
+});
+
+// CU002 FA1 — editar manualmente el valor de producción antes de confirmar
+document.getElementById('btnEditarAjuste').addEventListener('click', () => {
+  if (!state.datos) return;
+  const actual = valorAjuste(state.datos);
+  const entrada = prompt('Ingresa el valor de producción ajustado manualmente (unidades):', actual);
+  if (entrada == null) return;
+  const num = parseInt(String(entrada).replace(/[^0-9]/g, ''), 10);
+  if (isNaN(num) || num < 0) { alert('Valor inválido. Ingresa un número entero positivo.'); return; }
+  state.ajusteManual = num;
+  actualizarResultadoAjuste(state.datos);
 });
 
 function inyectarPantalla4(d) {
@@ -804,10 +1019,11 @@ function inyectarPantalla4(d) {
 }
 
 function actualizarResultadoAjuste(d) {
-  const valor = { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
+  const valor = valorAjuste(d);
   const delta = (((valor - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
   document.querySelector('#s4 .result-val').innerHTML =
-    fmtNum(valor) + ' <span class="result-unit">unidades</span>';
+    fmtNum(valor) + ' <span class="result-unit">unidades</span>' +
+    (state.ajusteManual != null ? ' <span style="font-size:12px; color:var(--mauve-deep);">(manual)</span>' : '');
   document.querySelector('#s4 .result-delta').textContent =
     (delta >= 0 ? '+' : '') + delta.replace('.', ',') + '% vs base';
 }
@@ -821,12 +1037,13 @@ document.querySelector('#s4 .btn-outline').addEventListener('click', () => naveg
 // ── 7. PANTALLA 05 ───────────────────────────────────────
 
 function inyectarPantalla5(d) {
-  const ajuste    = { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
-  const total     = ajuste + d.stockSeguridad;
+  const ajuste    = valorAjuste(d);
+  const margen    = d.margenEmergencia || 0;
+  const total     = ajuste + d.stockSeguridad + margen;
   const pctAjuste = (((ajuste - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
   const pctTotal  = (((total  - d.prediccionBase) / d.prediccionBase) * 100).toFixed(1);
   const signo     = v => (v >= 0 ? '+' : '') + String(v).replace('.', ',') + '%';
-  const nivel     = { baja: 'baja', media: 'media', alta: 'alta' }[state.sensibilidad];
+  const nivel     = state.ajusteManual != null ? 'manual' : state.sensibilidad;
 
   const filas = document.querySelectorAll('#s5 .comp-table tbody tr');
   filas[0].querySelectorAll('td')[1].textContent = fmtNum(d.prediccionBase);
@@ -840,9 +1057,17 @@ function inyectarPantalla5(d) {
 
   document.querySelector('#s5 .fb-num').innerHTML =
     fmtNum(total) + ' <span class="fb-unit">unidades</span>';
+  const cat = d.categoriaActiva || 'Todas las categorías';
+  document.querySelector('#s5 .fb-cat').textContent = cat + (margen ? ' · +margen emergencia' : '');
   document.querySelector('#s5 .fb-date').textContent =
     'Análisis completado ' + new Date().toLocaleDateString('es-CL', { day:'numeric', month:'long', year:'numeric' });
 }
+
+// Exportar plan final como PDF (usa el diálogo de impresión del navegador → Guardar como PDF)
+document.getElementById('btnExportarPDF').addEventListener('click', () => {
+  if (!state.datos) { alert('Primero genera un análisis.'); return; }
+  window.print();
+});
 
 document.querySelector('#s5 .btn-outline').addEventListener('click', () => navegarA('s4'));
 
