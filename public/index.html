@@ -338,10 +338,7 @@
     </div>
   </div>
   <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 01</span>
-      <span class="screen-label-title">Pantalla principal</span>
-    </div>
+
     <div class="page-heading">Nuevo análisis de demanda</div>
     <div class="page-sub">Configura los parámetros antes de cargar tus datos históricos de ventas.</div>
     <div class="form-grid">
@@ -372,10 +369,7 @@
     </div>
   </div>
   <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 02</span>
-      <span class="screen-label-title">Carga y validación · CU001</span>
-    </div>
+
     <div class="progress">
       <div class="prog-step"><div class="prog-circle done">✓</div><div class="prog-name">Configuración</div></div>
       <div class="prog-line"></div>
@@ -417,10 +411,7 @@
     </div>
   </div>
   <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 03</span>
-      <span class="screen-label-title">Resultados de predicción</span>
-    </div>
+
     <div class="chart-header">
       <div>
         <div class="chart-title">Poleras · Q4 2025</div>
@@ -520,10 +511,7 @@
     </div>
   </div>
   <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 04</span>
-      <span class="screen-label-title">Ajuste dinámico · CU002</span>
-    </div>
+
     <div class="page-heading">Sensibilidad de demanda</div>
     <div class="page-sub">Ajusta el nivel de cobertura según tu tolerancia al riesgo de sobrestock.</div>
     <div class="sens-list">
@@ -579,10 +567,7 @@
     </div>
   </div>
   <div class="screen-body">
-    <div class="screen-label">
-      <span class="screen-label-num">Pantalla 05</span>
-      <span class="screen-label-title">Plan de producción · Optimización final</span>
-    </div>
+
     <div class="page-heading">Comparación de modelos</div>
     <div class="page-sub">Resultado consolidado de todos los modelos aplicados al análisis.</div>
     <table class="comp-table">
@@ -910,12 +895,10 @@ function actualizarGrafico(serie, m, b, etiquetas) {
 
   // Update real dots
   const realCircles = svg.querySelectorAll('circle[fill="#B07060"]');
-  // Remove excess dots if fewer data points
   realCircles.forEach((c, i) => {
     if (i < ptsReal.length) {
       c.setAttribute('cx', ptsReal[i][0]);
       c.setAttribute('cy', ptsReal[i][1]);
-      // Make last dot larger with white stroke
       if (i === ptsReal.length - 1) { c.setAttribute('r', '6'); c.setAttribute('stroke', 'white'); c.setAttribute('stroke-width', '2.5'); }
       else { c.setAttribute('r', '5'); c.removeAttribute('stroke'); }
       c.style.display = '';
@@ -923,7 +906,6 @@ function actualizarGrafico(serie, m, b, etiquetas) {
       c.style.display = 'none';
     }
   });
-  // Add missing dots if more data points than existing circles
   if (ptsReal.length > realCircles.length) {
     for (let i = realCircles.length; i < ptsReal.length; i++) {
       const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -939,7 +921,6 @@ function actualizarGrafico(serie, m, b, etiquetas) {
   svg.querySelectorAll('text[data-xlabel]').forEach(t => t.remove());
   const NS = 'http://www.w3.org/2000/svg';
   if (etiquetas && etiquetas.length) {
-    // Real labels — show up to 8 evenly spaced to avoid crowding
     const maxLabels = Math.min(etiquetas.length, 8);
     const step = Math.max(1, Math.floor(etiquetas.length / maxLabels));
     for (let i = 0; i < etiquetas.length; i += step) {
@@ -953,7 +934,6 @@ function actualizarGrafico(serie, m, b, etiquetas) {
       t.textContent = String(etiquetas[i]).substring(0, 8);
       svg.appendChild(t);
     }
-    // Projection labels
     const projLabels = ['P+1 ↗', 'P+2 ↗', 'P+3'];
     ptsProj.forEach((p, k) => {
       const t = document.createElementNS(NS, 'text');
@@ -975,10 +955,8 @@ document.querySelector('#s3 .btn-ink').addEventListener('click', () => navegarA(
 
 const sensOpts = document.querySelectorAll('#s4 .sens-opt');
 
-// state.ajusteManual: si el usuario edita el valor a mano (CU002 FA1), sobreescribe el del modelo.
 state.ajusteManual = null;
 
-// Valor de ajuste vigente: manual si existe, si no el derivado de la sensibilidad.
 function valorAjuste(d) {
   if (state.ajusteManual != null) return state.ajusteManual;
   return { baja: d.ajusteBajo, media: d.ajusteMedio, alta: d.ajusteAlto }[state.sensibilidad];
@@ -988,7 +966,7 @@ sensOpts.forEach((opt, idx) => {
   const nivel = ['baja', 'media', 'alta'][idx];
   opt.addEventListener('click', () => {
     state.sensibilidad = nivel;
-    state.ajusteManual = null; // al cambiar la sensibilidad se descarta la edición manual
+    state.ajusteManual = null;
     sensOpts.forEach(o => { o.classList.remove('active'); const d = o.querySelector('.sens-radio-dot'); if (d) d.remove(); });
     opt.classList.add('active');
     const dot = document.createElement('div');
@@ -998,7 +976,6 @@ sensOpts.forEach((opt, idx) => {
   });
 });
 
-// CU002 FA1 — editar manualmente el valor de producción antes de confirmar
 document.getElementById('btnEditarAjuste').addEventListener('click', () => {
   if (!state.datos) return;
   const actual = valorAjuste(state.datos);
@@ -1063,7 +1040,6 @@ function inyectarPantalla5(d) {
     'Análisis completado ' + new Date().toLocaleDateString('es-CL', { day:'numeric', month:'long', year:'numeric' });
 }
 
-// Exportar plan final como PDF (usa el diálogo de impresión del navegador → Guardar como PDF)
 document.getElementById('btnExportarPDF').addEventListener('click', () => {
   if (!state.datos) { alert('Primero genera un análisis.'); return; }
   window.print();
